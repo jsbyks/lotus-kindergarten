@@ -56,3 +56,58 @@
     transform: translateY(-10px) scale(1.03) rotate(1deg);
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
+
+/* ===  Hero Blob / Oval Image Frame === */
+@keyframes blob-morph {
+    0%   { border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%; }
+    25%  { border-radius: 40% 60% 45% 55% / 60% 35% 65% 40%; }
+    50%  { border-radius: 55% 45% 60% 40% / 40% 60% 35% 65%; }
+    75%  { border-radius: 45% 55% 40% 60% / 65% 40% 60% 35%; }
+    100% { border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%; }
+}
+
+.blob {
+    border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+    animation: blob-morph 10s ease-in-out infinite;
+    box-shadow:
+        0 0 0 10px rgba(216, 180, 254, 0.35),
+        0 0 0 22px rgba(249, 168, 212, 0.22),
+        0 20px 60px rgba(155, 93, 229, 0.25);
+    position: relative;
+}
+
+/* Wrapper that carries the two decorative rings as pseudo-elements */
+.blob-wrapper {
+    position: relative;
+    padding: 40px;
+    width: 100%;
+}
+
+/* Inner dashed purple ring */
+.blob-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 22px;
+    border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+    border: 3px dashed rgba(167, 139, 250, 0.55);
+    animation: blob-morph 10s ease-in-out infinite, spin-slow 18s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Outer dotted pink ring */
+.blob-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+    border: 2px dotted rgba(249, 168, 212, 0.5);
+    animation: blob-morph 10s ease-in-out infinite reverse, spin-slow 25s linear infinite reverse;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
