@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -33,6 +34,17 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again later.'
 });
 app.use('/api', limiter);
+
+// Block API requests until MongoDB is connected
+app.use('/api', (req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({
+            status: 'error',
+            message: 'Database not connected. Please try again in a few seconds.'
+        });
+    }
+    next();
+});
 
 // Body parser
 app.use(express.json({ limit: '10mb' }));
