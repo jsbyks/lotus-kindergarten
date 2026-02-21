@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Games - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="student-container">
+        <aside class="student-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">🎓</div>
+                <h2>My Learning</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="games.html" class="nav-item active">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="achievements.html" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>My Stars</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>About Me</span>
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Exit</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="student-main">
+            <header class="student-header">
+                <div class="welcome-message">
+                    <h1>🎮 Fun Games</h1>
+                    <p>Pick a game to play and learn!</p>
+                </div>
+                <div class="student-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="games-section">
+                    <h2>🎨 Learning Games</h2>
+                    <div class="games-grid-large">
+                        <a href="games/colors.html" class="game-card-large">
+                            <div class="game-icon-large">🎨</div>
+                            <h3>Learn Colors</h3>
+                            <p>Red, Blue, Yellow...</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/numbers.html" class="game-card-large">
+                            <div class="game-icon-large">🔢</div>
+                            <h3>Count Numbers</h3>
+                            <p>1, 2, 3...</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/shapes.html" class="game-card-large">
+                            <div class="game-icon-large">🔷</div>
+                            <h3>Find Shapes</h3>
+                            <p>Circle, Square...</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/letters.html" class="game-card-large">
+                            <div class="game-icon-large">🔤</div>
+                            <h3>ABC Letters</h3>
+                            <p>Learn the alphabet!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/animals.html" class="game-card-large">
+                            <div class="game-icon-large">🐶</div>
+                            <h3>Animal Sounds</h3>
+                            <p>What does it say?</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/puzzle.html" class="game-card-large">
+                            <div class="game-icon-large">🧩</div>
+                            <h3>Puzzles</h3>
+                            <p>Put pieces together!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/memory.html" class="game-card-large">
+                            <div class="game-icon-large">🧠</div>
+                            <h3>Memory Match</h3>
+                            <p>Find the pairs!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/drawing.html" class="game-card-large">
+                            <div class="game-icon-large">✏️</div>
+                            <h3>Draw & Paint</h3>
+                            <p>Be creative!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="games-section">
+                    <h2>🎵 Music & Fun</h2>
+                    <div class="games-grid-large">
+                        <a href="games/music.html" class="game-card-large">
+                            <div class="game-icon-large">🎵</div>
+                            <h3>Music Time</h3>
+                            <p>Play instruments!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/dance.html" class="game-card-large">
+                            <div class="game-icon-large">💃</div>
+                            <h3>Dance Move</h3>
+                            <p>Move and groove!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                        <a href="games/story.html" class="game-card-large">
+                            <div class="game-icon-large">📖</div>
+                            <h3>Story Time</h3>
+                            <p>Listen to stories!</p>
+                            <div class="play-button">Play!</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon">💡</div>
+                    <div>
+                        <h3>Ask for Help!</h3>
+                        <p>If you need help playing, ask your teacher or parent!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="student-utils.js"></script>
+    <script>
+        async function init() {
+            await checkAuth();
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

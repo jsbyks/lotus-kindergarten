@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Students - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item active"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>My Students</h1>
+                    <p class="breadcrumb">Home / Students</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="filter-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search students..." onkeyup="filterTable()">
+                    </div>
+                    <select id="classFilter" onchange="filterTable()">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Class</th>
+                                <th>Age</th>
+                                <th>Parent Contact</th>
+                                <th>Attendance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTable">
+                            <tr><td colspan="6" class="loading">Loading students...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadStudents();
+            await loadClassesFilter();
+        });
+
+        async function loadStudents() {
+            try {
+                const response = await apiRequest('/teacher/students');
+                if (response.status === 'success') {
+                    displayStudents(response.data.students);
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                showNotification('Failed to load students', 'error');
+            }
+        }
+
+        async function loadClassesFilter() {
+            try {
+                const response = await apiRequest('/teacher/classes');
+                if (response.status === 'success') {
+                    const select = document.getElementById('classFilter');
+                    select.innerHTML = '<option value="">All Classes</option>' +
+                        response.data.classes.map(c => 
+                            `<option value="${c.name}">${c.name} (${c.program})</option>`
+                        ).join('');
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+
+        function displayStudents(students) {
+            const tbody = document.getElementById('studentsTable');
+            
+            if (!students || students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">No students found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = students.map(student => {
+                const user = student.userId || {};
+                const className = student.classId?.name || 'Not assigned';
+                const age = calculateAge(student.dateOfBirth);
+                const parent = student.parentId?.userId || {};
+                const parentContact = parent.phone || parent.email || 'N/A';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="student-info">
+                                <strong>${user.firstName} ${user.lastName}</strong>
+                                <small>${user.email || ''}</small>
+                            </div>
+                        </td>
+                        <td><span class="class-badge">${className}</span></td>
+                        <td>${age}</td>
+                        <td>${parentContact}</td>
+                        <td><span class="attendance-rate">95%</span></td>
+                        <td class="action-buttons">
+                            <button onclick="viewProgress('${student._id}')" class="btn-icon" title="View Progress">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button onclick="messageParent('${student.parentId?._id}')" class="btn-icon" title="Message Parent">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function calculateAge(dateOfBirth) {
+            if (!dateOfBirth) return 'N/A';
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age + ' years';
+        }
+
+        function viewProgress(studentId) {
+            showNotification('Student progress view coming soon', 'info');
+        }
+
+        function messageParent(parentId) {
+            if (!parentId) {
+                showNotification('No parent contact available', 'warning');
+                return;
+            }
+            location.href = `messages.html?parent=${parentId}`;
+        }
+
+        function filterTable() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsTable tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchValue);
+                const matchesClass = !classFilter || text.includes(classFilter);
+                row.style.display = matchesSearch && matchesClass ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

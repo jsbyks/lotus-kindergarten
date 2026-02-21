@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📞 Contact Us - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind (for existing content) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/global-styles.css">
+    <link rel="stylesheet" href="src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/config.js"></script>
+    <script src="src/components/header.js" defer></script>
+    <script src="src/components/footer.js" defer></script>
+    <script src="src/js/main.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <app-header></app-header>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gradient-to-b from-purple-600 to-pink-600 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-bold">📞 Contact Us</span>
+                <h2 class="font-fredoka text-4xl mt-4">Enroll Your Child <span class="text-yellow-300">Today!</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-3xl p-8 text-gray-800">
+                    <h3 class="font-fredoka text-2xl mb-6 text-purple-600">Send us a Message</h3>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="Parent Name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            <input type="text" placeholder="Child's Name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        </div>
+                        <input type="email" placeholder="Email Address" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <input type="tel" placeholder="Phone Number" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            <option>Select Program</option>
+                            <option>Toddlers (1.5-2.5 years)</option>
+                            <option>Pre-Kindergarten (2.5-4 years)</option>
+                            <option>Kindergarten (4-6 years)</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your Message" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold hover:shadow-lg transition">
+                            <i class="fas fa-paper-plane mr-2"></i>Submit Enrollment Request
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="font-fredoka text-2xl mb-6">Visit Our Campus</h3>
+                        <div class="bg-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d231263.77424085823!2d51.35282759709785!3d25.285945453498015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45c534ffdce87f%3A0x44d9319f78cfd4b1!2sDoha%2C%20Qatar!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s" width="100%" height="200" style="border:0; border-radius: 15px;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Address</p>
+                                <p class="text-white/80">Al Sadd Area, Street 123, Doha, Qatar</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-phone text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Phone</p>
+                                <p class="text-white/80">+974 4XXX XXXX</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Email</p>
+                                <p class="text-white/80">info@lotuskindergarten.qa</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Working Hours</p>
+                                <p class="text-white/80">Sun-Thu: 7:30 AM - 1:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</body>
+</html>

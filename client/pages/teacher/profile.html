@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item active"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>My Profile</h1>
+                    <p class="breadcrumb">Home / Profile</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h2 id="teacherNameDisplay">Loading...</h2>
+                        <p id="teacherEmail"></p>
+                        <span class="role-badge teacher">Teacher</span>
+                    </div>
+
+                    <div class="profile-details">
+                        <h3><i class="fas fa-info-circle"></i> Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Employee ID</label>
+                                <p id="employeeId">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Phone</label>
+                                <p id="teacherPhone">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Subject</label>
+                                <p id="teacherSubject">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Experience</label>
+                                <p id="teacherExperience">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Qualification</label>
+                                <p id="teacherQualification">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Join Date</label>
+                                <p id="joinDate">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            loadProfile();
+        });
+
+        async function loadProfile() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            document.getElementById('teacherNameDisplay').textContent = 
+                `${userData.firstName || ''} ${userData.lastName || ''}`;
+            document.getElementById('teacherEmail').textContent = userData.email || '';
+            document.getElementById('teacherPhone').textContent = userData.phone || 'Not provided';
+            
+            // Load full teacher profile
+            try {
+                const response = await apiRequest('/teacher/profile');
+                if (response.status === 'success') {
+                    const teacher = response.data.teacher;
+                    document.getElementById('employeeId').textContent = teacher.employeeId || 'N/A';
+                    document.getElementById('teacherSubject').textContent = teacher.subject || 'N/A';
+                    document.getElementById('teacherExperience').textContent = 
+                        teacher.experience ? `${teacher.experience} years` : 'N/A';
+                    document.getElementById('teacherQualification').textContent = teacher.qualification || 'N/A';
+                    document.getElementById('joinDate').textContent = 
+                        teacher.joinDate ? new Date(teacher.joinDate).toLocaleDateString() : 'N/A';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+    </script>
+</body>
+</html>

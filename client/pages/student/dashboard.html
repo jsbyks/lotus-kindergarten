@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="student-container">
+        <aside class="student-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">🎓</div>
+                <h2>My Learning</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="games.html" class="nav-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="achievements.html" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>My Stars</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>About Me</span>
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Exit</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="student-main">
+            <header class="student-header">
+                <div class="welcome-message">
+                    <h1>👋 Hello, <span id="studentName">Friend</span>!</h1>
+                    <p>Ready to learn and play today?</p>
+                </div>
+                <div class="student-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="quick-actions">
+                    <a href="games.html" class="action-card games">
+                        <div class="card-icon">🎮</div>
+                        <h3>Play Games</h3>
+                        <p>Fun learning games!</p>
+                    </a>
+                    <a href="homework.html" class="action-card homework">
+                        <div class="card-icon">📚</div>
+                        <h3>My Homework</h3>
+                        <p id="homeworkCount">0 tasks</p>
+                    </a>
+                    <a href="achievements.html" class="action-card achievements">
+                        <div class="card-icon">⭐</div>
+                        <h3>My Stars</h3>
+                        <p id="achievementCount">0 earned</p>
+                    </a>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>📖 My Homework</h2>
+                        <a href="homework.html" class="btn-link">See All</a>
+                    </div>
+                    <div class="homework-grid" id="homeworkGrid">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>🎮 Fun Games</h2>
+                        <a href="games.html" class="btn-link">Play More</a>
+                    </div>
+                    <div class="games-grid">
+                        <a href="games/colors.html" class="game-card">
+                            <div class="game-icon">🎨</div>
+                            <h3>Colors</h3>
+                        </a>
+                        <a href="games/numbers.html" class="game-card">
+                            <div class="game-icon">🔢</div>
+                            <h3>Numbers</h3>
+                        </a>
+                        <a href="games/shapes.html" class="game-card">
+                            <div class="game-icon">🔷</div>
+                            <h3>Shapes</h3>
+                        </a>
+                        <a href="games/letters.html" class="game-card">
+                            <div class="game-icon">🔤</div>
+                            <h3>ABC</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>🌟 Recent Stars</h2>
+                        <a href="achievements.html" class="btn-link">See All</a>
+                    </div>
+                    <div class="achievements-preview" id="achievementsPreview">
+                        <div class="achievement-badge">
+                            <i class="fas fa-star"></i>
+                            <p>Keep learning!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="student-utils.js"></script>
+    <script>
+        async function loadDashboard() {
+            if (!await checkAuth()) return;
+
+            try {
+                await Promise.all([
+                    loadHomework(),
+                    loadAchievements()
+                ]);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        async function loadHomework() {
+            try {
+                const response = await apiRequest('/student/homework');
+                const homework = response.data || [];
+                
+                const pending = homework.filter(hw => hw.status !== 'submitted');
+                document.getElementById('homeworkCount').textContent = 
+                    `${pending.length} ${pending.length === 1 ? 'task' : 'tasks'}`;
+
+                const grid = document.getElementById('homeworkGrid');
+                
+                if (homework.length === 0) {
+                    grid.innerHTML = '<div class="no-data">🎉 No homework right now!</div>';
+                    return;
+                }
+
+                grid.innerHTML = homework.slice(0, 3).map(hw => {
+                    const dueDate = new Date(hw.dueDate);
+                    const isOverdue = dueDate < new Date() && hw.status !== 'submitted';
+                    
+                    return `
+                        <div class="homework-card ${hw.status === 'submitted' ? 'completed' : ''}">
+                            <div class="homework-icon">
+                                ${hw.status === 'submitted' ? '✅' : '📝'}
+                            </div>
+                            <div class="homework-info">
+                                <h3>${hw.title}</h3>
+                                <p>Due: ${formatDate(hw.dueDate)}</p>
+                                ${isOverdue ? '<span class="overdue-badge">Late!</span>' : ''}
+                            </div>
+                            ${hw.status !== 'submitted' ? 
+                                `<a href="homework.html?id=${hw._id}" class="btn-small">Do It</a>` :
+                                `<span class="status-badge">Done! ✓</span>`
+                            }
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading homework:', error);
+                document.getElementById('homeworkGrid').innerHTML = 
+                    '<div class="no-data">Could not load homework</div>';
+            }
+        }
+
+        async function loadAchievements() {
+            try {
+                const response = await apiRequest('/student/achievements');
+                const achievements = response.data || [];
+                
+                document.getElementById('achievementCount').textContent = 
+                    `${achievements.length} earned`;
+
+                const container = document.getElementById('achievementsPreview');
+                
+                if (achievements.length === 0) {
+                    container.innerHTML = `
+                        <div class="achievement-badge">
+                            <i class="fas fa-star"></i>
+                            <p>Earn stars by completing tasks!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = achievements.slice(0, 6).map(achievement => `
+                    <div class="achievement-badge earned">
+                        <div class="badge-icon">${achievement.icon || '⭐'}</div>
+                        <p>${achievement.name}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../src/css/global-styles.css">
+    <link rel="stylesheet" href="../../src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../../src/components/header.js" defer></script>
+    <script src="../../src/components/footer.js" defer></script>
+    <script src="../../src/js/main.js" defer></script>
+    <script src="teacher-management.js"></script>
+</head>
+<body class="bg-gray-50">
+    <app-header></app-header>
+
+    <div class="max-w-7xl mx-auto px-4 py-10 min-h-screen">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="font-fredoka text-3xl text-purple-800">Teacher Dashboard</h1>
+            <div class="text-right">
+                <p class="text-sm text-gray-500">Welcome back,</p>
+                <p class="font-bold text-gray-800" id="teacherName">Teacher</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg h-fit">
+                <nav class="space-y-2">
+                    <a href="#" data-section="dashboard" class="nav-link flex items-center gap-3 px-4 py-3 bg-purple-100 text-purple-700 rounded-xl font-bold">
+                        <i class="fas fa-chart-pie w-6"></i> Dashboard
+                    </a>
+                    <a href="#" data-section="classes" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-school w-6"></i> My Classes
+                    </a>
+                    <a href="#" data-section="homework" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-book w-6"></i> Homework
+                    </a>
+                    <a href="#" data-section="attendance" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-user-check w-6"></i> Attendance
+                    </a>
+                    <a href="#" data-section="announcements" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-bullhorn w-6"></i> Announcements
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div id="mainContent" class="md:col-span-3 space-y-8">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">My Classes</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalClasses">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-school absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Students</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalStudents">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-child absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-400 to-purple-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Active Homework</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalHomework">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-book absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <h3 class="font-fredoka text-xl text-gray-800 mb-6">Quick Actions</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button type="button" onclick="showCreateHomeworkForm()" class="bg-purple-100 hover:bg-purple-200 p-6 rounded-xl text-center transition">
+                            <i class="fas fa-plus-circle text-4xl text-purple-600 mb-2"></i>
+                            <p class="font-bold text-gray-800">Create Homework</p>
+                        </button>
+                        <button type="button" onclick="showMarkAttendanceForm()" class="bg-green-100 hover:bg-green-200 p-6 rounded-xl text-center transition">
+                            <i class="fas fa-check-circle text-4xl text-green-600 mb-2"></i>
+                            <p class="font-bold text-gray-800">Mark Attendance</p>
+                        </button>
+                        <button type="button" onclick="document.querySelector('[data-section=\\\"classes\\\"]').click()" class="bg-blue-100 hover:bg-blue-200 p-6 rounded-xl text-center transition">
+                            <i class="fas fa-users text-4xl text-blue-600 mb-2"></i>
+                            <p class="font-bold text-gray-800">View My Classes</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <h3 class="font-fredoka text-xl text-gray-800 mb-6">Recent Homework Submissions</h3>
+                    <div id="recentSubmissions" class="text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                        <p class="mt-2 text-gray-600">Loading recent submissions...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer></app-footer>
+
+    <!-- Dashboard Script -->
+    <script>
+        // Check teacher authentication
+        (function checkTeacherAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Please login as a teacher to access this page.');
+                window.location.href = '../../pages/auth/login.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            if (userData.role !== 'teacher') {
+                alert('Access denied. This page is only accessible to teachers.');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set teacher name
+            const teacherName = document.getElementById('teacherName');
+            if (teacherName) {
+                teacherName.textContent = `${userData.firstName} ${userData.lastName}`;
+            }
+
+            // Load dashboard data
+            loadDashboardStats();
+        })();
+
+        async function loadDashboardStats() {
+            const token = localStorage.getItem('token');
+
+            try {
+                // Fetch teacher's classes
+                const classesResponse = await fetch('http://localhost:8000/api/teacher/classes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const classesData = await classesResponse.json();
+
+                // Fetch all homework
+                const homeworkResponse = await fetch('http://localhost:8000/api/homework', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const homeworkData = await homeworkResponse.json();
+
+                if (classesData.status === 'success') {
+                    const classes = classesData.data.classes || [];
+                    const totalStudents = classes.reduce((sum, cls) => sum + (cls.students?.length || 0), 0);
+
+                    document.getElementById('totalClasses').textContent = classes.length;
+                    document.getElementById('totalStudents').textContent = totalStudents;
+                }
+
+                if (homeworkData.status === 'success') {
+                    const activeHomework = homeworkData.data.homework || [];
+                    document.getElementById('totalHomework').textContent = activeHomework.length;
+
+                    // Show recent submissions
+                    loadRecentSubmissions(activeHomework);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                document.getElementById('totalClasses').textContent = '?';
+                document.getElementById('totalStudents').textContent = '?';
+                document.getElementById('totalHomework').textContent = '?';
+
+                document.getElementById('recentSubmissions').innerHTML = `
+                    <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    <p class="mt-2 text-red-600">Error loading data</p>
+                `;
+            }
+        }
+
+        function loadRecentSubmissions(homework) {
+            const submissionsContainer = document.getElementById('recentSubmissions');
+
+            // Collect all submissions from all homework
+            let allSubmissions = [];
+            homework.forEach(hw => {
+                if (hw.submissions && hw.submissions.length > 0) {
+                    hw.submissions.forEach(sub => {
+                        allSubmissions.push({
+                            ...sub,
+                            homeworkTitle: hw.title,
+                            homeworkId: hw._id
+                        });
+                    });
+                }
+            });
+
+            // Sort by submission date (most recent first)
+            allSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+            // Take only the first 5
+            const recentSubmissions = allSubmissions.slice(0, 5);
+
+            if (recentSubmissions.length === 0) {
+                submissionsContainer.innerHTML = `
+                    <i class="fas fa-inbox text-3xl text-gray-400"></i>
+                    <p class="mt-2 text-gray-600">No submissions yet</p>
+                `;
+                return;
+            }
+
+            submissionsContainer.innerHTML = `
+                <div class="space-y-3">
+                    ${recentSubmissions.map(sub => {
+                        const statusColors = {
+                            submitted: 'bg-yellow-100 text-yellow-800',
+                            graded: 'bg-green-100 text-green-800'
+                        };
+                        const status = sub.grade !== null && sub.grade !== undefined ? 'graded' : 'submitted';
+                        const submittedDate = new Date(sub.submittedAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        return `
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800">${sub.homeworkTitle}</h4>
+                                    <p class="text-sm text-gray-600">Student: ${sub.studentId?.firstName || 'Unknown'} ${sub.studentId?.lastName || ''}</p>
+                                    <p class="text-xs text-gray-500">Submitted: ${submittedDate}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full ${statusColors[status]}">
+                                        ${status === 'graded' ? `Graded: ${sub.grade}/100` : 'Pending'}
+                                    </span>
+                                    ${status === 'submitted' ? `
+                                        <button type="button" onclick="gradeSubmission('${sub.homeworkId}', '${sub._id}')" class="ml-2 text-purple-600 hover:text-purple-800">
+                                            <i class="fas fa-edit"></i> Grade
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

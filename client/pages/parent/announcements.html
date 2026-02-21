@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="parent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="parent-container">
+        <aside class="parent-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Parent Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="children.html" class="nav-item">
+                    <i class="fas fa-child"></i> My Children
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i> Homework
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="announcements.html" class="nav-item active">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="parent-main">
+            <header class="parent-header">
+                <div class="header-left">
+                    <h1>School Announcements</h1>
+                    <p class="breadcrumb">Home / Announcements</p>
+                </div>
+                <div class="parent-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <strong id="parentName">Parent</strong>
+                        <small>Parent</small>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="filter-section">
+                    <div class="form-group">
+                        <select id="typeFilter" onchange="loadAnnouncements()">
+                            <option value="">All Types</option>
+                            <option value="general">General</option>
+                            <option value="event">Event</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="announcements-grid" id="announcementsGrid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading announcements...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="parent-utils.js"></script>
+    <script>
+        async function initPage() {
+            if (!await checkAuth()) return;
+            await loadAnnouncements();
+        }
+
+        async function loadAnnouncements() {
+            const type = document.getElementById('typeFilter').value;
+            const container = document.getElementById('announcementsGrid');
+
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+            try {
+                let endpoint = '/announcements';
+                if (type) endpoint += `?type=${type}`;
+
+                const response = await apiRequest(endpoint);
+                const announcements = response.data || [];
+
+                if (announcements.length === 0) {
+                    container.innerHTML = '<div class="no-data">No announcements found</div>';
+                    return;
+                }
+
+                container.innerHTML = announcements.map(ann => `
+                    <div class="announcement-card ${ann.priority || ''} ${ann.isPinned ? 'pinned' : ''}">
+                        ${ann.isPinned ? '<div class="pinned-badge"><i class="fas fa-thumbtack"></i> Pinned</div>' : ''}
+                        
+                        <div class="announcement-header">
+                            <div class="announcement-icon ${ann.type}">
+                                <i class="fas fa-${getAnnouncementIcon(ann.type)}"></i>
+                            </div>
+                            <div class="announcement-meta">
+                                <span class="type-badge ${ann.type}">${ann.type || 'general'}</span>
+                                ${ann.priority === 'high' ? '<span class="priority-badge high">High Priority</span>' : ''}
+                                ${ann.priority === 'urgent' ? '<span class="priority-badge urgent">Urgent</span>' : ''}
+                            </div>
+                        </div>
+
+                        <div class="announcement-body">
+                            <h3>${ann.title}</h3>
+                            <p>${ann.content}</p>
+                        </div>
+
+                        <div class="announcement-footer">
+                            <div class="announcement-info">
+                                <span><i class="fas fa-calendar"></i> ${formatDate(ann.createdAt)}</span>
+                                <span><i class="fas fa-user"></i> ${ann.createdBy?.firstName || 'Admin'} ${ann.createdBy?.lastName || ''}</span>
+                            </div>
+                            ${ann.targetAudience && ann.targetAudience.length > 0 ? 
+                                `<div class="target-badges">
+                                    ${ann.targetAudience.map(target => 
+                                        `<span class="target-badge">${target}</span>`
+                                    ).join('')}
+                                </div>` : ''
+                            }
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading announcements:', error);
+                container.innerHTML = '<div class="no-data">Failed to load announcements</div>';
+                showNotification('Failed to load announcements', 'error');
+            }
+        }
+
+        function getAnnouncementIcon(type) {
+            const icons = {
+                general: 'info-circle',
+                event: 'calendar-alt',
+                holiday: 'umbrella-beach',
+                urgent: 'exclamation-triangle'
+            };
+            return icons[type] || 'bullhorn';
+        }
+
+        window.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

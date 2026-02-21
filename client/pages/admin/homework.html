@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Management - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-seedling"></i> Lotus Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="teachers.html" class="nav-item"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                <a href="parents.html" class="nav-item"><i class="fas fa-users"></i> Parents</a>
+                <a href="classes.html" class="nav-item"><i class="fas fa-school"></i> Classes</a>
+                <a href="homework.html" class="nav-item active"><i class="fas fa-tasks"></i> Homework</a>
+                <a href="announcements.html" class="nav-item"><i class="fas fa-bullhorn"></i> Announcements</a>
+                <a href="games-manager.html" class="nav-item"><i class="fas fa-gamepad"></i> Games</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-file-alt"></i> Reports</a>
+                <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Homework Overview</h1>
+                    <p class="breadcrumb">Home / Homework</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="filter-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search homework..." onkeyup="filterTable()">
+                    </div>
+                    <select id="statusFilter" onchange="filterTable()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="graded">Graded</option>
+                    </select>
+                    <select id="classFilter" onchange="filterTable()">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Class</th>
+                                <th>Teacher</th>
+                                <th>Subject</th>
+                                <th>Due Date</th>
+                                <th>Submissions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="homeworkTable">
+                            <tr><td colspan="8" class="loading">Loading homework...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadHomework();
+            await loadClassesFilter();
+        });
+
+        async function loadHomework() {
+            try {
+                const response = await apiRequest('/admin/homework');
+                if (response.status === 'success') {
+                    displayHomework(response.data.homework);
+                }
+            } catch (error) {
+                console.error('Error loading homework:', error);
+                showNotification('Failed to load homework', 'error');
+            }
+        }
+
+        async function loadClassesFilter() {
+            try {
+                const response = await apiRequest('/admin/classes');
+                if (response.status === 'success') {
+                    const select = document.getElementById('classFilter');
+                    select.innerHTML = '<option value="">All Classes</option>' +
+                        response.data.classes.map(c => 
+                            `<option value="${c.name}">${c.name} (${c.program})</option>`
+                        ).join('');
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+
+        function displayHomework(homework) {
+            const tbody = document.getElementById('homeworkTable');
+            
+            if (!homework || homework.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8">No homework found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = homework.map(hw => {
+                const className = hw.classId?.name || 'N/A';
+                const teacher = hw.teacherId?.userId || {};
+                const teacherName = `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim() || 'N/A';
+                const dueDate = hw.dueDate ? new Date(hw.dueDate).toLocaleDateString() : 'N/A';
+                const submissionCount = hw.submissions?.length || 0;
+                const totalStudents = hw.classId?.students?.length || 0;
+                
+                return `
+                    <tr>
+                        <td><strong>${hw.title}</strong></td>
+                        <td>${className}</td>
+                        <td>${teacherName}</td>
+                        <td><span class="subject-badge">${hw.subject || 'General'}</span></td>
+                        <td>${dueDate}</td>
+                        <td>${submissionCount}/${totalStudents}</td>
+                        <td><span class="status-badge ${hw.status}">${hw.status || 'pending'}</span></td>
+                        <td class="action-buttons">
+                            <button onclick="viewHomework('${hw._id}')" class="btn-icon" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="viewSubmissions('${hw._id}')" class="btn-icon" title="View Submissions">
+                                <i class="fas fa-file-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function viewHomework(id) {
+            showNotification('Opening homework details...', 'info');
+            // Navigate to detailed view
+        }
+
+        function viewSubmissions(id) {
+            showNotification('Opening submissions...', 'info');
+            // Navigate to submissions view
+        }
+
+        function filterTable() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('#homeworkTable tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchValue);
+                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                const matchesClass = !classFilter || text.includes(classFilter);
+                row.style.display = matchesSearch && matchesStatus && matchesClass ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

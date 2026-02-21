@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../student.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .game-header h1 {
+            font-size: 48px;
+            color: #C770F0;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat {
+            color: #764ba2;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            transition: all 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .memory-card .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+        .memory-card .card-front {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .memory-card .card-back {
+            background: white;
+            transform: rotateY(180deg);
+            border: 3px solid #667eea;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #00F5D4, #00F2B8);
+            cursor: default;
+            animation: matchPulse 0.6s;
+        }
+
+        .memory-card.matched .card-front {
+            background: linear-gradient(135deg, #00F5D4, #00F2B8);
+        }
+
+        @keyframes matchPulse {
+            0%, 100% { transform: rotateY(180deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.2); }
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched) {
+            transform: scale(1.05);
+        }
+
+        .feedback {
+            font-size: 36px;
+            margin: 20px 0;
+            min-height: 50px;
+        }
+
+        .btn-game {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #C770F0, #764ba2);
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-game:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(199, 112, 240, 0.5);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #4FACFE, #00F2B8);
+        }
+
+        .win-message {
+            font-size: 72px;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .win-message.show {
+            display: block;
+            animation: celebrate 1s infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🧠 Memory Match!</h1>
+            <div class="game-stats">
+                <div class="stat">Moves: <span id="moves">0</span></div>
+                <div class="stat">Matches: <span id="matches">0</span>/8</div>
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback">Find all the pairs!</div>
+        <div class="win-message" id="winMessage">🎉 You Won! 🎉</div>
+
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="game-controls">
+            <button class="btn-game" id="startBtn" onclick="startGame()">Start Game!</button>
+            <button class="btn-game btn-back" onclick="location.href='../games.html'">Back to Games</button>
+        </div>
+    </div>
+
+    <script>
+        const emojis = ['🍎', '🍌', '🍇', '🍊', '🍓', '🦁', '🐘', '🐻', 
+                       '⚽', '🎨', '🌈', '⭐', '🚗', '🎈', '🎁', '🌸'];
+
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let gameActive = false;
+
+        function startGame() {
+            // Reset game
+            matchedPairs = 0;
+            moves = 0;
+            flippedCards = [];
+            gameActive = true;
+            document.getElementById('winMessage').classList.remove('show');
+            document.getElementById('feedback').textContent = 'Find all the pairs!';
+            updateStats();
+            
+            // Select 8 random emojis and duplicate them
+            const selectedEmojis = emojis.sort(() => Math.random() - 0.5).slice(0, 8);
+            cards = [...selectedEmojis, ...selectedEmojis];
+            
+            // Shuffle cards
+            cards = cards.sort(() => Math.random() - 0.5);
+            
+            // Create grid
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = cards.map((emoji, index) => `
+                <div class="memory-card" data-index="${index}" onclick="flipCard(${index})">
+                    <div class="card-face card-front">?</div>
+                    <div class="card-face card-back">${emoji}</div>
+                </div>
+            `).join('');
+        }
+
+        function flipCard(index) {
+            if (!gameActive) return;
+            
+            const cardElement = document.querySelector(`[data-index="${index}"]`);
+            
+            // Can't flip if already flipped or matched
+            if (cardElement.classList.contains('flipped') || 
+                cardElement.classList.contains('matched')) {
+                return;
+            }
+            
+            // Can't flip more than 2 cards
+            if (flippedCards.length >= 2) return;
+            
+            // Flip the card
+            cardElement.classList.add('flipped');
+            flippedCards.push({ index, emoji: cards[index], element: cardElement });
+            
+            // Check for match when 2 cards are flipped
+            if (flippedCards.length === 2) {
+                moves++;
+                updateStats();
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            setTimeout(() => {
+                if (card1.emoji === card2.emoji) {
+                    // Match found!
+                    card1.element.classList.add('matched');
+                    card2.element.classList.add('matched');
+                    matchedPairs++;
+                    updateStats();
+                    
+                    document.getElementById('feedback').textContent = '🎉 Great match!';
+                    
+                    // Check if game is won
+                    if (matchedPairs === 8) {
+                        setTimeout(winGame, 500);
+                    }
+                } else {
+                    // No match, flip back
+                    card1.element.classList.remove('flipped');
+                    card2.element.classList.remove('flipped');
+                    document.getElementById('feedback').textContent = '😊 Try again!';
+                }
+                
+                flippedCards = [];
+            }, 1000);
+        }
+
+        function updateStats() {
+            document.getElementById('moves').textContent = moves;
+            document.getElementById('matches').textContent = matchedPairs;
+        }
+
+        function winGame() {
+            gameActive = false;
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('winMessage').classList.add('show');
+            
+            // Show congratulations message
+            const message = moves <= 12 ? 
+                'Amazing! Perfect memory!' : 
+                moves <= 20 ? 
+                'Great job!' : 
+                'Well done!';
+            
+            setTimeout(() => {
+                document.getElementById('feedback').textContent = 
+                    `${message} You did it in ${moves} moves!`;
+            }, 1000);
+        }
+
+        // Auto-start game on load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Don't auto-start, let user click start
+        });
+    </script>
+</body>
+</html>

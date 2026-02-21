@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <!-- Sidebar -->
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="my-classes.html" class="nav-item">
+                    <i class="fas fa-school"></i> My Classes
+                </a>
+                <a href="students.html" class="nav-item">
+                    <i class="fas fa-user-graduate"></i> Students
+                </a>
+                <a href="homework-create.html" class="nav-item">
+                    <i class="fas fa-plus-circle"></i> Create Homework
+                </a>
+                <a href="homework-review.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i> Review Homework
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i> My Profile
+                </a>
+                <a href="#" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>Welcome Back, <span id="teacherName">Teacher</span>! 👋</h1>
+                    <p class="breadcrumb">Dashboard</p>
+                </div>
+                <div class="header-right">
+                    <div class="teacher-profile">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card classes">
+                        <div class="stat-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalClasses">0</h3>
+                            <p>My Classes</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card students">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card homework">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeHomework">0</h3>
+                            <p>Active Homework</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card pending">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingReviews">0</h3>
+                            <p>Pending Reviews</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Classes Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-school"></i> My Classes</h2>
+                        <a href="my-classes.html" class="btn-link">View All →</a>
+                    </div>
+                    <div id="classesGrid" class="classes-grid">
+                        <div class="loading">Loading classes...</div>
+                    </div>
+                </div>
+
+                <!-- Recent Homework -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tasks"></i> Recent Homework</h2>
+                        <a href="homework-review.html" class="btn-link">View All →</a>
+                    </div>
+                    <div class="homework-list">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Class</th>
+                                    <th>Due Date</th>
+                                    <th>Submissions</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homeworkTable">
+                                <tr><td colspan="5" class="loading">Loading homework...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button onclick="location.href='homework-create.html'" class="action-btn homework">
+                            <i class="fas fa-plus-circle"></i> Create Homework
+                        </button>
+                        <button onclick="location.href='attendance.html'" class="action-btn attendance">
+                            <i class="fas fa-calendar-check"></i> Mark Attendance
+                        </button>
+                        <button onclick="location.href='students.html'" class="action-btn students">
+                            <i class="fas fa-user-graduate"></i> View Students
+                        </button>
+                        <button onclick="location.href='messages.html'" class="action-btn messages">
+                            <i class="fas fa-envelope"></i> Send Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadDashboardData();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load teacher's classes
+                const classesResponse = await apiRequest('/teacher/classes');
+                if (classesResponse.status === 'success') {
+                    displayClasses(classesResponse.data.classes);
+                    updateStats(classesResponse.data.classes);
+                }
+
+                // Load teacher's homework
+                const homeworkResponse = await apiRequest('/teacher/homework');
+                if (homeworkResponse.status === 'success') {
+                    displayHomework(homeworkResponse.data.homework);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function updateStats(classes) {
+            document.getElementById('totalClasses').textContent = classes.length;
+            
+            let totalStudents = 0;
+            classes.forEach(cls => {
+                totalStudents += cls.students?.length || 0;
+            });
+            document.getElementById('totalStudents').textContent = totalStudents;
+        }
+
+        function displayClasses(classes) {
+            const grid = document.getElementById('classesGrid');
+            
+            if (!classes || classes.length === 0) {
+                grid.innerHTML = '<p class="no-data">No classes assigned yet</p>';
+                return;
+            }
+            
+            grid.innerHTML = classes.slice(0, 3).map(cls => `
+                <div class="class-card">
+                    <div class="class-header ${cls.program}">
+                        <h3>${cls.name}</h3>
+                        <span class="program-badge">${cls.program}</span>
+                    </div>
+                    <div class="class-info">
+                        <p><i class="fas fa-door-open"></i> Room ${cls.roomNumber || 'N/A'}</p>
+                        <p><i class="fas fa-users"></i> ${cls.students?.length || 0} Students</p>
+                        <p><i class="fas fa-clock"></i> ${cls.schedule || 'N/A'}</p>
+                    </div>
+                    <button onclick="location.href='my-classes.html'" class="btn-secondary">View Details</button>
+                </div>
+            `).join('');
+        }
+
+        function displayHomework(homework) {
+            const tbody = document.getElementById('homeworkTable');
+            
+            if (!homework || homework.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No homework assigned yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = homework.slice(0, 5).map(hw => {
+                const dueDate = hw.dueDate ? new Date(hw.dueDate).toLocaleDateString() : 'N/A';
+                const submissionCount = hw.submissions?.length || 0;
+                const totalStudents = hw.classId?.students?.length || 0;
+                
+                return `
+                    <tr>
+                        <td><strong>${hw.title}</strong></td>
+                        <td>${hw.classId?.name || 'N/A'}</td>
+                        <td>${dueDate}</td>
+                        <td>${submissionCount}/${totalStudents}</td>
+                        <td><span class="status-badge ${hw.status}">${hw.status || 'active'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update stats
+            const active = homework.filter(h => h.status === 'active').length;
+            const pending = homework.reduce((sum, h) => sum + (h.submissions?.filter(s => s.status === 'pending').length || 0), 0);
+            
+            document.getElementById('activeHomework').textContent = active;
+            document.getElementById('pendingReviews').textContent = pending;
+        }
+    </script>
+</body>
+</html>

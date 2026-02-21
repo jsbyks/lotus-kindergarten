@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="parent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="parent-container">
+        <!-- Sidebar -->
+        <aside class="parent-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Parent Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="my-children.html" class="nav-item">
+                    <i class="fas fa-child"></i>
+                    <span>My Children</span>
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="announcements.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Announcements</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="nav-item logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="parent-main">
+            <header class="parent-header">
+                <div class="header-left">
+                    <h1>Dashboard</h1>
+                    <p class="breadcrumb">Home / Dashboard</p>
+                </div>
+                <div class="parent-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <span id="parentName">Parent</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <!-- Welcome Section -->
+                <div class="welcome-card">
+                    <div class="welcome-content">
+                        <h2>Welcome back, <span id="welcomeName"></span>! 👋</h2>
+                        <p>Here's what's happening with your children today</p>
+                    </div>
+                    <div class="date-display">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card children">
+                        <div class="stat-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalChildren">0</h3>
+                            <p>My Children</p>
+                        </div>
+                    </div>
+                    <div class="stat-card homework">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeHomework">0</h3>
+                            <p>Active Homework</p>
+                        </div>
+                    </div>
+                    <div class="stat-card attendance">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="attendanceRate">0%</h3>
+                            <p>Attendance Rate</p>
+                        </div>
+                    </div>
+                    <div class="stat-card messages">
+                        <div class="stat-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="unreadMessages">0</h3>
+                            <p>Unread Messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Children Cards -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-child"></i> My Children</h2>
+                        <a href="my-children.html" class="btn-link">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div id="childrenGrid" class="children-grid">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading children...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Homework -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-book"></i> Recent Homework</h2>
+                        <a href="homework.html" class="btn-link">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div id="homeworkContainer">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading homework...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar"></i> Upcoming Events</h2>
+                        <a href="announcements.html" class="btn-link">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div id="eventsContainer">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading events...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="parent-utils.js"></script>
+    <script>
+        let childrenData = [];
+        let homeworkData = [];
+
+        async function loadDashboard() {
+            try {
+                // Display current date
+                const dateElement = document.getElementById('currentDate');
+                const today = new Date();
+                dateElement.textContent = today.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+
+                // Get user data
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    document.getElementById('parentName').textContent = userData.firstName || 'Parent';
+                    document.getElementById('welcomeName').textContent = userData.firstName || 'Parent';
+                }
+
+                // Load children
+                const childrenResponse = await apiRequest('/parent/children');
+                childrenData = childrenResponse.data || [];
+                
+                document.getElementById('totalChildren').textContent = childrenData.length;
+                displayChildren(childrenData);
+
+                // Load homework for all children
+                const homeworkResponse = await apiRequest('/parent/homework');
+                homeworkData = homeworkResponse.data || [];
+                
+                const activeHomework = homeworkData.filter(hw => hw.status === 'active').length;
+                document.getElementById('activeHomework').textContent = activeHomework;
+                displayRecentHomework(homeworkData);
+
+                // Calculate attendance rate
+                const attendanceResponse = await apiRequest('/parent/attendance');
+                const attendanceData = attendanceResponse.data || [];
+                const attendanceRate = calculateAttendanceRate(attendanceData);
+                document.getElementById('attendanceRate').textContent = attendanceRate + '%';
+
+                // Load messages
+                const messagesResponse = await apiRequest('/parent/messages');
+                const messages = messagesResponse.data || [];
+                const unreadCount = messages.filter(m => !m.isRead).length;
+                document.getElementById('unreadMessages').textContent = unreadCount;
+
+                // Load events/announcements
+                const announcementsResponse = await apiRequest('/announcements');
+                const announcements = announcementsResponse.data || [];
+                displayUpcomingEvents(announcements);
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function displayChildren(children) {
+            const container = document.getElementById('childrenGrid');
+            
+            if (children.length === 0) {
+                container.innerHTML = '<div class="no-data">No children enrolled</div>';
+                return;
+            }
+
+            container.innerHTML = children.map(child => `
+                <div class="child-card">
+                    <div class="child-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="child-info">
+                        <h3>${child.firstName} ${child.lastName}</h3>
+                        <p><i class="fas fa-birthday-cake"></i> ${calculateAge(child.dateOfBirth)} years old</p>
+                        <span class="program-badge ${child.class?.program || 'Pre-K'}">${child.class?.program || 'Not Assigned'}</span>
+                    </div>
+                    <div class="child-stats">
+                        <div class="stat-item">
+                            <label>Class</label>
+                            <strong>${child.class?.name || 'Not Assigned'}</strong>
+                        </div>
+                        <div class="stat-item">
+                            <label>Teacher</label>
+                            <strong>${child.class?.teacher?.firstName || 'N/A'} ${child.class?.teacher?.lastName || ''}</strong>
+                        </div>
+                    </div>
+                    <a href="my-children.html?childId=${child._id}" class="btn-view">
+                        View Details <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function displayRecentHomework(homework) {
+            const container = document.getElementById('homeworkContainer');
+            
+            if (homework.length === 0) {
+                container.innerHTML = '<div class="no-data">No homework assigned</div>';
+                return;
+            }
+
+            // Sort by due date and show first 5
+            const recentHomework = homework
+                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                .slice(0, 5);
+
+            container.innerHTML = `
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Child</th>
+                                <th>Title</th>
+                                <th>Subject</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${recentHomework.map(hw => `
+                                <tr>
+                                    <td>
+                                        <div class="student-info">
+                                            <strong>${hw.student?.firstName} ${hw.student?.lastName}</strong>
+                                        </div>
+                                    </td>
+                                    <td>${hw.title}</td>
+                                    <td><span class="subject-badge">${hw.subject}</span></td>
+                                    <td>${formatDate(hw.dueDate)}</td>
+                                    <td><span class="status-badge ${hw.submission?.status || 'pending'}">${hw.submission?.status || 'Not Submitted'}</span></td>
+                                    <td>
+                                        <a href="homework.html?homeworkId=${hw._id}" class="btn-icon">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function displayUpcomingEvents(announcements) {
+            const container = document.getElementById('eventsContainer');
+            
+            // Filter event announcements
+            const events = announcements
+                .filter(a => a.type === 'event' && new Date(a.createdAt) >= new Date())
+                .slice(0, 3);
+
+            if (events.length === 0) {
+                container.innerHTML = '<div class="no-data">No upcoming events</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="events-list">
+                    ${events.map(event => `
+                        <div class="event-item">
+                            <div class="event-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="event-info">
+                                <h4>${event.title}</h4>
+                                <p>${event.content}</p>
+                                <small><i class="fas fa-clock"></i> ${formatDateTime(event.createdAt)}</small>
+                            </div>
+                            ${event.isPinned ? '<span class="pinned-badge"><i class="fas fa-thumbtack"></i></span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function calculateAge(dateOfBirth) {
+            if (!dateOfBirth) return 'N/A';
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function calculateAttendanceRate(attendanceData) {
+            if (attendanceData.length === 0) return 0;
+            const presentCount = attendanceData.filter(a => a.status === 'present').length;
+            return Math.round((presentCount / attendanceData.length) * 100);
+        }
+
+        // Initialize
+        checkAuth().then(() => {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>

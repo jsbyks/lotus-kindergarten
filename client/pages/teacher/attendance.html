@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item active"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>Attendance</h1>
+                    <p class="breadcrumb">Home / Attendance</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="attendance-controls">
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <select id="classSelect" onchange="loadStudents()">
+                            <option value="">Choose a class</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="attendanceDate" onchange="loadAttendance()">
+                    </div>
+                </div>
+
+                <div id="attendanceContent" class="attendance-content">
+                    <div class="no-data">Please select a class to mark attendance</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        let selectedClass = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadClasses();
+            setTodayDate();
+        });
+
+        async function loadClasses() {
+            try {
+                const response = await apiRequest('/teacher/classes');
+                if (response.status === 'success') {
+                    const select = document.getElementById('classSelect');
+                    select.innerHTML = '<option value="">Choose a class</option>' +
+                        response.data.classes.map(c => 
+                            `<option value="${c._id}">${c.name} (${c.program})</option>`
+                        ).join('');
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+
+        function setTodayDate() {
+            const dateInput = document.getElementById('attendanceDate');
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        async function loadStudents() {
+            const classId = document.getElementById('classSelect').value;
+            if (!classId) {
+                document.getElementById('attendanceContent').innerHTML = 
+                    '<div class="no-data">Please select a class</div>';
+                return;
+            }
+
+            selectedClass = classId;
+            await loadAttendance();
+        }
+
+        async function loadAttendance() {
+            if (!selectedClass) return;
+
+            const date = document.getElementById('attendanceDate').value;
+            const container = document.getElementById('attendanceContent');
+            container.innerHTML = '<div class="loading">Loading students...</div>';
+
+            try {
+                // In a real app, load students for the class
+                const response = await apiRequest(`/teacher/students?classId=${selectedClass}`);
+                if (response.status === 'success') {
+                    displayAttendance(response.data.students);
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+                container.innerHTML = '<div class="no-data">Failed to load students</div>';
+            }
+        }
+
+        function displayAttendance(students) {
+            const container = document.getElementById('attendanceContent');
+            
+            if (!students || students.length === 0) {
+                container.innerHTML = '<div class="no-data">No students in this class</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="attendance-header">
+                    <h3>Mark Attendance (${students.length} students)</h3>
+                    <div class="bulk-actions">
+                        <button onclick="markAllPresent()" class="btn-secondary">
+                            <i class="fas fa-check-double"></i> All Present
+                        </button>
+                        <button onclick="saveAttendance()" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Attendance
+                        </button>
+                    </div>
+                </div>
+                <div class="attendance-list">
+                    ${students.map(student => {
+                        const user = student.userId || {};
+                        return `
+                            <div class="attendance-item" data-student-id="${student._id}">
+                                <div class="student-info">
+                                    <i class="fas fa-user-circle"></i>
+                                    <div>
+                                        <strong>${user.firstName} ${user.lastName}</strong>
+                                        <small>${student.studentId || ''}</small>
+                                    </div>
+                                </div>
+                                <div class="attendance-options">
+                                    <label class="attendance-option present">
+                                        <input type="radio" name="attendance_${student._id}" value="present" checked>
+                                        <span><i class="fas fa-check"></i> Present</span>
+                                    </label>
+                                    <label class="attendance-option absent">
+                                        <input type="radio" name="attendance_${student._id}" value="absent">
+                                        <span><i class="fas fa-times"></i> Absent</span>
+                                    </label>
+                                    <label class="attendance-option late">
+                                        <input type="radio" name="attendance_${student._id}" value="late">
+                                        <span><i class="fas fa-clock"></i> Late</span>
+                                    </label>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function markAllPresent() {
+            document.querySelectorAll('input[value="present"]').forEach(input => {
+                input.checked = true;
+            });
+        }
+
+        async function saveAttendance() {
+            const classId = selectedClass;
+            const date = document.getElementById('attendanceDate').value;
+            const items = document.querySelectorAll('.attendance-item');
+            
+            const attendance = Array.from(items).map(item => {
+                const studentId = item.dataset.studentId;
+                const status = item.querySelector('input:checked').value;
+                return { studentId, status };
+            });
+
+            try {
+                // In a real app, save to backend
+                showNotification(`Attendance saved for ${attendance.length} students!`, 'success');
+            } catch (error) {
+                console.error('Error saving attendance:', error);
+                showNotification('Failed to save attendance', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

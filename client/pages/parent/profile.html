@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="parent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="parent-container">
+        <aside class="parent-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Parent Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="children.html" class="nav-item">
+                    <i class="fas fa-child"></i> My Children
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i> Homework
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="announcements.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+                <a href="profile.html" class="nav-item active">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="parent-main">
+            <header class="parent-header">
+                <div class="header-left">
+                    <h1>My Profile</h1>
+                    <p class="breadcrumb">Home / Profile</p>
+                </div>
+                <div class="parent-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <strong id="parentName">Parent</strong>
+                        <small>Parent</small>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h2 id="profileName">Loading...</h2>
+                        <p id="profileEmail">email@example.com</p>
+                        <span class="role-badge parent">Parent</span>
+                    </div>
+
+                    <div class="profile-details">
+                        <h3><i class="fas fa-info-circle"></i> Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <i class="fas fa-id-card"></i>
+                                <div>
+                                    <label>National ID</label>
+                                    <p id="nationalId">Loading...</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <label>Phone Number</label>
+                                    <p id="phone">Loading...</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-home"></i>
+                                <div>
+                                    <label>Address</label>
+                                    <p id="address">Loading...</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-child"></i>
+                                <div>
+                                    <label>Number of Children</label>
+                                    <p id="childrenCount">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <h3><i class="fas fa-child"></i> My Children</h3>
+                        <div id="childrenList" class="children-list-profile">
+                            <div class="loading">
+                                <i class="fas fa-spinner fa-spin"></i> Loading children...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="parent-utils.js"></script>
+    <script>
+        async function loadProfile() {
+            if (!await checkAuth()) return;
+
+            try {
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                
+                // Load parent profile
+                const response = await apiRequest('/parent/profile');
+                const profile = response.data || {};
+
+                // Update basic info
+                document.getElementById('profileName').textContent = 
+                    `${userData.firstName || ''} ${userData.lastName || ''}`;
+                document.getElementById('profileEmail').textContent = userData.email || '';
+                
+                // Update detailed info
+                document.getElementById('nationalId').textContent = profile.nationalId || 'N/A';
+                document.getElementById('phone').textContent = userData.phone || 'N/A';
+                document.getElementById('address').textContent = profile.address || 'N/A';
+
+                // Load children
+                await loadChildren();
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showNotification('Failed to load profile', 'error');
+            }
+        }
+
+        async function loadChildren() {
+            try {
+                const response = await apiRequest('/parent/children');
+                const children = response.data || [];
+
+                document.getElementById('childrenCount').textContent = children.length;
+
+                const container = document.getElementById('childrenList');
+                
+                if (children.length === 0) {
+                    container.innerHTML = '<div class="no-data">No children enrolled</div>';
+                    return;
+                }
+
+                container.innerHTML = children.map(child => `
+                    <div class="child-profile-card">
+                        <div class="child-avatar-small">
+                            <i class="fas fa-${child.gender === 'male' ? 'mars' : 'venus'}"></i>
+                        </div>
+                        <div class="child-profile-info">
+                            <h4>${child.firstName} ${child.lastName}</h4>
+                            <p><i class="fas fa-school"></i> ${child.classId?.name || 'Not Assigned'}</p>
+                            <p><i class="fas fa-calendar"></i> ${formatDate(child.dateOfBirth)}</p>
+                        </div>
+                        <a href="children.html?id=${child._id}" class="btn-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading children:', error);
+                document.getElementById('childrenList').innerHTML = '<div class="no-data">Failed to load children</div>';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

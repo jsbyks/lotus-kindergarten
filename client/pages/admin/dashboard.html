@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-seedling"></i> Lotus Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="students.html" class="nav-item">
+                    <i class="fas fa-user-graduate"></i> Students
+                </a>
+                <a href="teachers.html" class="nav-item">
+                    <i class="fas fa-chalkboard-teacher"></i> Teachers
+                </a>
+                <a href="parents.html" class="nav-item">
+                    <i class="fas fa-users"></i> Parents
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <i class="fas fa-school"></i> Classes
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-tasks"></i> Homework
+                </a>
+                <a href="announcements.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+                <a href="games-manager.html" class="nav-item">
+                    <i class="fas fa-gamepad"></i> Games
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i> Reports
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+                <a href="#" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Top Bar -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Dashboard Overview</h1>
+                    <p class="breadcrumb">Home / Dashboard</p>
+                </div>
+                <div class="header-right">
+                    <div class="admin-profile">
+                        <span id="adminName">Admin User</span>
+                        <div class="avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card students">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card teachers">
+                        <div class="stat-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalTeachers">0</h3>
+                            <p>Total Teachers</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card parents">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalParents">0</h3>
+                            <p>Total Parents</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card classes">
+                        <div class="stat-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalClasses">0</h3>
+                            <p>Total Classes</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card homework">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalHomework">0</h3>
+                            <p>Total Homework</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card users">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-history"></i> Recent Users</h2>
+                    </div>
+                    <div class="recent-users-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentUsersTable">
+                                <tr>
+                                    <td colspan="4" class="loading">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button onclick="location.href='students.html'" class="action-btn students">
+                            <i class="fas fa-user-plus"></i> Add Student
+                        </button>
+                        <button onclick="location.href='teachers.html'" class="action-btn teachers">
+                            <i class="fas fa-user-plus"></i> Add Teacher
+                        </button>
+                        <button onclick="location.href='classes.html'" class="action-btn classes">
+                            <i class="fas fa-plus-circle"></i> Create Class
+                        </button>
+                        <button onclick="location.href='announcements.html'" class="action-btn announcements">
+                            <i class="fas fa-bullhorn"></i> New Announcement
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin-utils.js"></script>
+    <script>
+        // Load dashboard data on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadDashboardStats();
+        });
+
+        async function loadDashboardStats() {
+            try {
+                const response = await apiRequest('/admin/dashboard/stats');
+                
+                if (response.status === 'success') {
+                    const stats = response.data.stats;
+                    
+                    // Update stat cards
+                    document.getElementById('totalStudents').textContent = stats.totalStudents;
+                    document.getElementById('totalTeachers').textContent = stats.totalTeachers;
+                    document.getElementById('totalParents').textContent = stats.totalParents;
+                    document.getElementById('totalClasses').textContent = stats.totalClasses;
+                    document.getElementById('totalHomework').textContent = stats.totalHomework;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers;
+                    
+                    // Load recent users
+                    displayRecentUsers(stats.recentUsers);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function displayRecentUsers(users) {
+            const tbody = document.getElementById('recentUsersTable');
+            
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No recent users found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.firstName} ${user.lastName}</td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${user.role}">${user.role}</span></td>
+                    <td>${formatDate(user.createdAt)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪷 About Us - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../src/css/global-styles.css">
+    <link rel="stylesheet" href="../../src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="../../src/components/header.js" defer></script>
+    <script src="../../src/components/footer.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../../src/js/main.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-pink-50 to-purple-50">
+    <app-header></app-header>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <span class="bg-purple-100 text-purple-600 px-4 py-2 rounded-full text-sm font-bold">About Us</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">Why Choose <span class="text-purple-600">Lotus Kindergarten?</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative">
+                    <div class="absolute -top-4 -left-4 w-full h-full bg-yellow-300 rounded-3xl"></div>
+                    <img src="https://images.unsplash.com/photo-1564429238980-c7d9e5a1d695?w=600&h=500&fit=crop" alt="Our classroom" class="relative rounded-3xl shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800">MOE Certified</p>
+                                <p class="text-sm text-gray-500">Qatar Ministry of Education</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-fredoka text-3xl text-gray-800 mb-6">Nurturing Tomorrow's Leaders Today</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        At Lotus Kindergarten, we believe every child is unique and deserves an education that nurtures their 
+                        individual talents. Located in the heart of Doha, we've been shaping young minds for over 15 years 
+                        with our innovative approach to early childhood education.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-heart text-pink-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Loving Care</h4>
+                                <p class="text-gray-500 text-sm">Our teachers provide warm, nurturing care for every child</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-brain text-blue-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Smart Learning</h4>
+                                <p class="text-gray-500 text-sm">Play-based curriculum designed by child development experts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-globe text-green-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Bilingual Education</h4>
+                                <p class="text-gray-500 text-sm">English and Arabic curriculum with native speakers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-gradient-to-b from-pink-50 to-purple-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="bg-yellow-100 text-yellow-600 px-4 py-2 rounded-full text-sm font-bold">💬 Testimonials</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">What Parents <span class="text-yellow-500">Say About Us</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl p-8 relative shadow-lg">
+                    <div class="absolute -top-4 left-8 text-5xl text-purple-300">"</div>
+                    <p class="text-gray-600 mb-6 mt-4">My daughter loves going to Lotus Kindergarten every day! The teachers are amazing and the facilities are world-class. Best decision we made!</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop" alt="Parent" class="w-12 h-12 rounded-full">
+                        <div>
+                            <p class="font-bold text-gray-800">Sarah Al-Thani</p>
+                            <p class="text-sm text-gray-500">Mother of Lina, Pre-K</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-3xl p-8 relative shadow-lg">
+                    <div class="absolute -top-4 left-8 text-5xl text-blue-300">"</div>
+                    <p class="text-gray-600 mb-6 mt-4">The bilingual program is exceptional. My son speaks both Arabic and English fluently now. The online homework portal is so convenient!</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="Parent" class="w-12 h-12 rounded-full">
+                        <div>
+                            <p class="font-bold text-gray-800">Ahmed Hassan</p>
+                            <p class="text-sm text-gray-500">Father of Omar, KG</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-3xl p-8 relative shadow-lg">
+                    <div class="absolute -top-4 left-8 text-5xl text-yellow-300">"</div>
+                    <p class="text-gray-600 mb-6 mt-4">Safe, nurturing, and professional. The CCTV monitoring gives us peace of mind. Our twins have developed so much in just 6 months!</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" alt="Parent" class="w-12 h-12 rounded-full">
+                        <div>
+                            <p class="font-bold text-gray-800">Maria Santos</p>
+                            <p class="text-sm text-gray-500">Mother of Twins, Toddlers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</body>
+</html>

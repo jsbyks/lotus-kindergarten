@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Classes - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item active"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>My Classes</h1>
+                    <p class="breadcrumb">Home / My Classes</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div id="classesDisplay" class="classes-display">
+                    <div class="loading">Loading your classes...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadClasses();
+        });
+
+        async function loadClasses() {
+            try {
+                const response = await apiRequest('/teacher/classes');
+                if (response.status === 'success') {
+                    displayClasses(response.data.classes);
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+                showNotification('Failed to load classes', 'error');
+            }
+        }
+
+        function displayClasses(classes) {
+            const container = document.getElementById('classesDisplay');
+            
+            if (!classes || classes.length === 0) {
+                container.innerHTML = '<div class="no-data">No classes assigned yet</div>';
+                return;
+            }
+            
+            container.innerHTML = classes.map(cls => `
+                <div class="class-detail-card">
+                    <div class="class-detail-header ${cls.program}">
+                        <div>
+                            <h2>${cls.name}</h2>
+                            <span class="program-badge">${cls.program}</span>
+                        </div>
+                        <div class="class-actions">
+                            <button onclick="viewStudents('${cls._id}')" class="btn-icon" title="View Students">
+                                <i class="fas fa-users"></i>
+                            </button>
+                            <button onclick="createHomework('${cls._id}')" class="btn-icon" title="Create Homework">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="class-detail-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <i class="fas fa-door-open"></i>
+                                <div>
+                                    <label>Room Number</label>
+                                    <p>${cls.roomNumber || 'Not assigned'}</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-users"></i>
+                                <div>
+                                    <label>Students Enrolled</label>
+                                    <p>${cls.students?.length || 0} / ${cls.capacity || 0}</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <label>Schedule</label>
+                                    <p>${cls.schedule || 'Not set'}</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-child"></i>
+                                <div>
+                                    <label>Age Group</label>
+                                    <p>${getAgeGroup(cls.program)}</p>
+                                </div>
+                            </div>
+                        </div>
+                        ${cls.description ? `<p class="class-description">${cls.description}</p>` : ''}
+                        <div class="class-students">
+                            <h4>Students (${cls.students?.length || 0})</h4>
+                            <div class="student-list">
+                                ${displayStudentsList(cls.students)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayStudentsList(students) {
+            if (!students || students.length === 0) {
+                return '<p class="no-students">No students enrolled yet</p>';
+            }
+            
+            return students.slice(0, 10).map(student => {
+                const user = student.userId || {};
+                return `
+                    <div class="student-chip">
+                        <i class="fas fa-user-circle"></i>
+                        ${user.firstName} ${user.lastName}
+                    </div>
+                `;
+            }).join('') + (students.length > 10 ? `<div class="student-chip more">+${students.length - 10} more</div>` : '');
+        }
+
+        function getAgeGroup(program) {
+            const ages = {
+                'Pre-K': '3-4 years',
+                'KG1': '4-5 years',
+                'KG2': '5-6 years'
+            };
+            return ages[program] || 'N/A';
+        }
+
+        function viewStudents(classId) {
+            location.href = `students.html?class=${classId}`;
+        }
+
+        function createHomework(classId) {
+            location.href = `homework-create.html?class=${classId}`;
+        }
+    </script>
+</body>
+</html>

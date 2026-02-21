@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Programs - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind (for existing content) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/global-styles.css">
+    <link rel="stylesheet" href="src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/config.js"></script>
+    <script src="src/components/header.js" defer></script>
+    <script src="src/components/footer.js" defer></script>
+    <script src="src/js/main.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-purple-50 to-pink-50">
+    <app-header></app-header>
+
+    <!-- Programs Section -->
+    <section id="programs" class="py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <span class="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-bold">Our Programs</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">Age-Appropriate <span class="text-pink-500">Learning Programs</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Toddler Program -->
+                <div class="bg-white rounded-3xl p-8 card-hover shadow-lg border-t-4 border-pink-400">
+                    <div class="w-20 h-20 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
+                        <span class="text-4xl">🍼</span>
+                    </div>
+                    <h3 class="font-fredoka text-2xl text-gray-800 mb-2">Toddlers</h3>
+                    <p class="text-pink-500 font-semibold mb-4">Ages 1.5 - 2.5 Years</p>
+                    <p class="text-gray-600 mb-6">Gentle introduction to structured play, sensory activities, and social interaction.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-pink-400"></i>
+                            <span>Sensory Play</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-pink-400"></i>
+                            <span>Music & Movement</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-pink-400"></i>
+                            <span>Story Time</span>
+                        </li>
+                    </ul>
+                    <p class="font-fredoka text-2xl text-pink-500">QAR 3,500<span class="text-sm text-gray-400">/month</span></p>
+                </div>
+                
+                <!-- Pre-K Program -->
+                <div class="bg-white rounded-3xl p-8 card-hover shadow-xl border-t-4 border-purple-400 transform scale-105">
+                    <div class="absolute -top-3 right-8 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">POPULAR</div>
+                    <div class="w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                        <span class="text-4xl">🎨</span>
+                    </div>
+                    <h3 class="font-fredoka text-2xl text-gray-800 mb-2">Pre-Kindergarten</h3>
+                    <p class="text-purple-500 font-semibold mb-4">Ages 2.5 - 4 Years</p>
+                    <p class="text-gray-600 mb-6">Building foundation skills through creative play, early literacy, and numeracy.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-purple-400"></i>
+                            <span>Early Literacy</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-purple-400"></i>
+                            <span>Basic Math Concepts</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-purple-400"></i>
+                            <span>Art & Creativity</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-purple-400"></i>
+                            <span>Arabic Language</span>
+                        </li>
+                    </ul>
+                    <p class="font-fredoka text-2xl text-purple-500">QAR 4,200<span class="text-sm text-gray-400">/month</span></p>
+                </div>
+                
+                <!-- KG Program -->
+                <div class="bg-white rounded-3xl p-8 card-hover shadow-lg border-t-4 border-blue-400">
+                    <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                        <span class="text-4xl">📚</span>
+                    </div>
+                    <h3 class="font-fredoka text-2xl text-gray-800 mb-2">Kindergarten</h3>
+                    <p class="text-blue-500 font-semibold mb-4">Ages 4 - 6 Years</p>
+                    <p class="text-gray-600 mb-6">School readiness program with comprehensive academic and social development.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-blue-400"></i>
+                            <span>Reading & Writing</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-blue-400"></i>
+                            <span>Mathematics</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-600">
+                            <i class="fas fa-check-circle text-blue-400"></i>
+                            <span>Science Discovery</span>
+                        </li>
+                    </ul>
+                    <p class="font-fredoka text-2xl text-blue-500">QAR 4,800<span class="text-sm text-gray-400">/month</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Schedule Table -->
+    <section class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="bg-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-bold">Daily Schedule</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">A Day at <span class="text-blue-500">Lotus Kindergarten</span></h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-2xl overflow-hidden shadow-xl">
+                    <thead class="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                        <tr>
+                            <th class="py-4 px-6 text-left font-fredoka">Time</th>
+                            <th class="py-4 px-6 text-left font-fredoka">Activity</th>
+                            <th class="py-4 px-6 text-left font-fredoka">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">7:30 - 8:00</td>
+                            <td class="py-4 px-6"><span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">🌅 Arrival</span></td>
+                            <td class="py-4 px-6 text-gray-600">Welcome & Free Play</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">8:00 - 8:30</td>
+                            <td class="py-4 px-6"><span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">🥣 Breakfast</span></td>
+                            <td class="py-4 px-6 text-gray-600">Healthy Morning Meal</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">8:30 - 9:30</td>
+                            <td class="py-4 px-6"><span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">📖 Circle Time</span></td>
+                            <td class="py-4 px-6 text-gray-600">Songs, Stories & Calendar</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">9:30 - 10:30</td>
+                            <td class="py-4 px-6"><span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-sm">🎨 Learning Centers</span></td>
+                            <td class="py-4 px-6 text-gray-600">Art, Math, Reading Activities</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">10:30 - 11:00</td>
+                            <td class="py-4 px-6"><span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">🍎 Snack Time</span></td>
+                            <td class="py-4 px-6 text-gray-600">Healthy Snacks</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">11:00 - 12:00</td>
+                            <td class="py-4 px-6"><span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">🏃 Outdoor Play</span></td>
+                            <td class="py-4 px-6 text-gray-600">Physical Activities & Games</td>
+                        </tr>
+                        <tr class="border-b hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">12:00 - 12:30</td>
+                            <td class="py-4 px-6"><span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">🍽️ Lunch</span></td>
+                            <td class="py-4 px-6 text-gray-600">Nutritious Lunch</td>
+                        </tr>
+                        <tr class="hover:bg-purple-50 transition">
+                            <td class="py-4 px-6 font-semibold text-purple-600">12:30 - 1:00</td>
+                            <td class="py-4 px-6"><span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">👋 Dismissal</span></td>
+                            <td class="py-4 px-6 text-gray-600">Goodbye & Pick-up</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</body>
+</html>

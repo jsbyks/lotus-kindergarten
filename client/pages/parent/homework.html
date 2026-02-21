@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="parent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="parent-container">
+        <aside class="parent-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-users"></i> Parent Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="children.html" class="nav-item">
+                    <i class="fas fa-child"></i> My Children
+                </a>
+                <a href="homework.html" class="nav-item active">
+                    <i class="fas fa-book"></i> Homework
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="announcements.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="parent-main">
+            <header class="parent-header">
+                <div class="header-left">
+                    <h1>Children's Homework</h1>
+                    <p class="breadcrumb">Home / Homework</p>
+                </div>
+                <div class="parent-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <strong id="parentName">Parent</strong>
+                        <small>Parent</small>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="filter-section">
+                    <div class="form-group">
+                        <select id="childFilter" onchange="loadHomework()">
+                            <option value="">All Children</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="statusFilter" onchange="loadHomework()">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="submitted">Submitted</option>
+                            <option value="graded">Graded</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="subjectFilter" onchange="loadHomework()">
+                            <option value="">All Subjects</option>
+                            <option value="math">Math</option>
+                            <option value="english">English</option>
+                            <option value="science">Science</option>
+                            <option value="art">Art</option>
+                            <option value="music">Music</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="homework-cards" id="homeworkCards">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading homework...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="parent-utils.js"></script>
+    <script>
+        let childrenData = [];
+        let homeworkData = [];
+
+        async function initPage() {
+            if (!await checkAuth()) return;
+
+            try {
+                await loadChildren();
+                await loadHomework();
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showNotification('Failed to load data', 'error');
+            }
+        }
+
+        async function loadChildren() {
+            try {
+                const response = await apiRequest('/parent/children');
+                childrenData = response.data || [];
+                
+                const select = document.getElementById('childFilter');
+                select.innerHTML = '<option value="">All Children</option>' +
+                    childrenData.map(child => 
+                        `<option value="${child._id}">${child.firstName} ${child.lastName}</option>`
+                    ).join('');
+            } catch (error) {
+                console.error('Error loading children:', error);
+            }
+        }
+
+        async function loadHomework() {
+            const childId = document.getElementById('childFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const subject = document.getElementById('subjectFilter').value;
+
+            try {
+                let endpoint = '/parent/homework';
+                const params = new URLSearchParams();
+                if (childId) params.append('childId', childId);
+                if (status) params.append('status', status);
+                if (subject) params.append('subject', subject);
+                
+                if (params.toString()) endpoint += '?' + params.toString();
+
+                const response = await apiRequest(endpoint);
+                homeworkData = response.data || [];
+                
+                displayHomework(homeworkData);
+            } catch (error) {
+                console.error('Error loading homework:', error);
+                document.getElementById('homeworkCards').innerHTML = '<div class="no-data">Failed to load homework</div>';
+                showNotification('Failed to load homework', 'error');
+            }
+        }
+
+        function displayHomework(homework) {
+            const container = document.getElementById('homeworkCards');
+            
+            if (homework.length === 0) {
+                container.innerHTML = '<div class="no-data">No homework found</div>';
+                return;
+            }
+
+            container.innerHTML = homework.map(hw => {
+                const dueDate = new Date(hw.dueDate);
+                const isOverdue = dueDate < new Date() && hw.submissionStatus !== 'submitted';
+                
+                return `
+                    <div class="homework-card ${isOverdue ? 'overdue' : ''}">
+                        <div class="homework-header">
+                            <div>
+                                <h3>${hw.title}</h3>
+                                <div class="homework-meta">
+                                    <span class="class-badge ${hw.classId?.program || ''}">${hw.classId?.name || 'N/A'}</span>
+                                    <span class="subject-badge">${hw.subject || 'General'}</span>
+                                    <span class="status-badge ${hw.submissionStatus || 'pending'}">${hw.submissionStatus || 'Pending'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="homework-student">
+                            <i class="fas fa-child"></i>
+                            <strong>Student:</strong> ${hw.studentName || 'N/A'}
+                        </div>
+
+                        <div class="homework-description">
+                            ${hw.description || 'No description provided'}
+                        </div>
+
+                        <div class="homework-details">
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <label>Assigned</label>
+                                    <strong>${formatDate(hw.createdAt)}</strong>
+                                </div>
+                            </div>
+                            <div class="detail-item ${isOverdue ? 'overdue-text' : ''}">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <label>Due Date</label>
+                                    <strong>${formatDate(hw.dueDate)} ${isOverdue ? '(Overdue)' : ''}</strong>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-star"></i>
+                                <div>
+                                    <label>Max Points</label>
+                                    <strong>${hw.maxPoints || 100}</strong>
+                                </div>
+                            </div>
+                            ${hw.grade !== undefined ? `
+                            <div class="detail-item">
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <label>Grade</label>
+                                    <strong class="grade">${hw.grade}/${hw.maxPoints || 100}</strong>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        ${hw.feedback ? `
+                        <div class="homework-feedback">
+                            <strong><i class="fas fa-comment"></i> Teacher Feedback:</strong>
+                            <p>${hw.feedback}</p>
+                        </div>
+                        ` : ''}
+
+                        ${hw.submissionStatus === 'pending' ? `
+                        <div class="homework-actions">
+                            <button class="btn-primary" onclick="viewHomeworkDetails('${hw._id}')">
+                                <i class="fas fa-info-circle"></i> View Details
+                            </button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewHomeworkDetails(homeworkId) {
+            showNotification('Homework details view coming soon', 'info');
+        }
+
+        window.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

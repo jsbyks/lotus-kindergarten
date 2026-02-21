@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item active"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>Messages</h1>
+                    <p class="breadcrumb">Home / Messages</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" onclick="openComposeModal()">
+                        <i class="fas fa-pen"></i> Compose
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="messages-container">
+                    <div class="messages-sidebar">
+                        <div class="messages-tabs">
+                            <button class="tab-btn active" onclick="showTab('inbox')">
+                                <i class="fas fa-inbox"></i> Inbox
+                            </button>
+                            <button class="tab-btn" onclick="showTab('sent')">
+                                <i class="fas fa-paper-plane"></i> Sent
+                            </button>
+                        </div>
+                        <div class="messages-list" id="messagesList">
+                            <div class="loading">Loading messages...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="messages-content">
+                        <div class="no-message-selected">
+                            <i class="fas fa-envelope-open"></i>
+                            <p>Select a message to read</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Compose Modal -->
+    <div id="composeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Message</h2>
+                <span class="close" onclick="closeComposeModal()">&times;</span>
+            </div>
+            <form id="messageForm" onsubmit="sendMessage(event)">
+                <div class="form-group">
+                    <label>To (Parent)</label>
+                    <select name="recipientId" required>
+                        <option value="">Select parent...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" name="subject" required placeholder="Message subject">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="content" rows="6" required placeholder="Type your message..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeComposeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            loadMessages();
+        });
+
+        function loadMessages() {
+            // Placeholder - would load from backend
+            const list = document.getElementById('messagesList');
+            list.innerHTML = '<div class="no-data">No messages yet</div>';
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadMessages();
+        }
+
+        function openComposeModal() {
+            document.getElementById('composeModal').style.display = 'flex';
+        }
+
+        function closeComposeModal() {
+            document.getElementById('composeModal').style.display = 'none';
+        }
+
+        async function sendMessage(event) {
+            event.preventDefault();
+            showNotification('Message sent successfully!', 'success');
+            closeComposeModal();
+        }
+    </script>
+</body>
+</html>

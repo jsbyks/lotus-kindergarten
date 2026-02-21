@@ -1,0 +1,13 @@
+{
+  "name": "lotus-kindergarten",
+  "version": "1.0.0",
+  "description": "Full-stack kindergarten school management system",
+  "scripts": {
+    "build": "cd server && npm install",
+    "start": "node server/server.js",
+    "dev": "cd server && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

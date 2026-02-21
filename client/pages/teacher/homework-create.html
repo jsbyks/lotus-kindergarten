@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Homework - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="teacher-container">
+        <aside class="teacher-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="my-classes.html" class="nav-item"><i class="fas fa-school"></i> My Classes</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="homework-create.html" class="nav-item active"><i class="fas fa-plus-circle"></i> Create Homework</a>
+                <a href="homework-review.html" class="nav-item"><i class="fas fa-file-alt"></i> Review Homework</a>
+                <a href="attendance.html" class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</a>
+                <a href="messages.html" class="nav-item"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="teacher-main">
+            <header class="teacher-header">
+                <div class="header-left">
+                    <h1>Create Homework Assignment</h1>
+                    <p class="breadcrumb">Home / Create Homework</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="form-card">
+                    <form id="homeworkForm" onsubmit="createHomework(event)">
+                        <div class="form-section">
+                            <h3>📚 Basic Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Title *</label>
+                                    <input type="text" name="title" required placeholder="e.g., Math Practice - Numbers 1-10">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Class *</label>
+                                    <select name="classId" id="classSelect" required>
+                                        <option value="">Select Class</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Subject *</label>
+                                    <select name="subject" required>
+                                        <option value="">Select Subject</option>
+                                        <option value="Math">Math</option>
+                                        <option value="English">English</option>
+                                        <option value="Arabic">Arabic</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Art">Art</option>
+                                        <option value="Music">Music</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Due Date *</label>
+                                    <input type="date" name="dueDate" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Points</label>
+                                    <input type="number" name="maxPoints" min="0" max="100" value="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📝 Description & Instructions</h3>
+                            <div class="form-group full-width">
+                                <label>Description *</label>
+                                <textarea name="description" rows="5" required placeholder="Describe the homework assignment in detail..."></textarea>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Instructions</label>
+                                <textarea name="instructions" rows="4" placeholder="Step-by-step instructions for students..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>⚙️ Settings</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status">
+                                        <option value="active">Active - Visible to students</option>
+                                        <option value="draft">Draft - Save for later</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Difficulty</label>
+                                    <select name="difficulty">
+                                        <option value="easy">Easy</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="allowLateSubmission" checked>
+                                    Allow late submissions
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" onclick="location.href='homework-review.html'" class="btn-secondary">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-check"></i> Create Homework
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadClasses();
+            setMinDate();
+        });
+
+        async function loadClasses() {
+            try {
+                const response = await apiRequest('/teacher/classes');
+                if (response.status === 'success') {
+                    const select = document.getElementById('classSelect');
+                    select.innerHTML = '<option value="">Select Class</option>' +
+                        response.data.classes.map(c => 
+                            `<option value="${c._id}">${c.name} (${c.program})</option>`
+                        ).join('');
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+
+        function setMinDate() {
+            const dateInput = document.querySelector('input[name="dueDate"]');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            dateInput.value = today;
+        }
+
+        async function createHomework(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            data.allowLateSubmission = formData.has('allowLateSubmission');
+            
+            try {
+                const response = await apiRequest('/teacher/homework', 'POST', data);
+                if (response.status === 'success') {
+                    showNotification('Homework created successfully!', 'success');
+                    setTimeout(() => {
+                        location.href = 'homework-review.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Error creating homework:', error);
+                showNotification(error.message || 'Failed to create homework', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

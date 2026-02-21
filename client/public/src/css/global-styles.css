@@ -1,0 +1,96 @@
+/* ============================================
+   GLOBAL STYLES - Applied to ALL Pages
+   ============================================ */
+
+/* Import Kid-Friendly Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+
+/* CSS Variables - Available Everywhere */
+:root {
+    /* Lotus Colors */
+    --lotus-pink: #FF6B9D;
+    --lotus-purple: #9B5DE5;
+    --lotus-blue: #00BBF9;
+    --lotus-green: #00F5D4;
+    --lotus-yellow: #FEE440;
+    --lotus-orange: #F77F00;
+
+    /* Fonts */
+    --font-kids: 'Baloo 2', 'Comic Neue', cursive;
+    --font-display: 'Fredoka', cursive;
+    --font-body: 'Comic Neue', -apple-system, sans-serif;
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+}
+
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #fdfbfb 0%, #fffef9 100%);
+    color: #2D3436;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--lotus-purple);
+    line-height: 1.2;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 2rem; }
+h4 { font-size: 1.5rem; }
+
+p {
+    font-family: var(--font-kids);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Container */
+.container,
+.lotus-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-gradient {
+    background: linear-gradient(135deg, var(--lotus-pink), var(--lotus-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.75rem; }
+}

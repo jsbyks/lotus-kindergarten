@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Homework - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="student-container">
+        <aside class="student-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">🎓</div>
+                <h2>My Learning</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="games.html" class="nav-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="homework.html" class="nav-item active">
+                    <i class="fas fa-book"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="achievements.html" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>My Stars</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>About Me</span>
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Exit</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="student-main">
+            <header class="student-header">
+                <div class="welcome-message">
+                    <h1>📚 My Homework</h1>
+                    <p>Let's finish our tasks!</p>
+                </div>
+                <div class="student-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="homework-list" id="homeworkList">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading homework...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Homework Detail Modal -->
+    <div id="homeworkModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="modalTitle">Homework</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="homework-detail">
+                    <div class="detail-section">
+                        <h3>📝 What to do:</h3>
+                        <p id="homeworkDescription">Loading...</p>
+                    </div>
+                    <div class="detail-section">
+                        <h3>📅 Due Date:</h3>
+                        <p id="homeworkDueDate">Loading...</p>
+                    </div>
+                    <div class="detail-section">
+                        <h3>✏️ My Answer:</h3>
+                        <textarea id="submissionContent" rows="5" placeholder="Type your answer here..."></textarea>
+                    </div>
+                    <div class="detail-section">
+                        <h3>📎 Add a Picture (optional):</h3>
+                        <input type="file" id="submissionFile" accept="image/*,.pdf">
+                        <p class="help-text">Ask your parent to help with this!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Not Now</button>
+                <button class="btn-primary large" onclick="submitHomework()">
+                    <i class="fas fa-check"></i> Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="student-utils.js"></script>
+    <script>
+        let currentHomework = null;
+
+        async function loadHomework() {
+            if (!await checkAuth()) return;
+
+            try {
+                const response = await apiRequest('/student/homework');
+                const homework = response.data || [];
+                
+                const container = document.getElementById('homeworkList');
+                
+                if (homework.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-data large">
+                            <div class="emoji">🎉</div>
+                            <h2>No Homework!</h2>
+                            <p>You're all done! Great job!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Separate pending and completed
+                const pending = homework.filter(hw => hw.status !== 'submitted' && hw.status !== 'graded');
+                const completed = homework.filter(hw => hw.status === 'submitted' || hw.status === 'graded');
+
+                let html = '';
+
+                if (pending.length > 0) {
+                    html += '<div class="homework-section"><h2>📝 To Do</h2><div class="homework-cards">';
+                    pending.forEach(hw => {
+                        const dueDate = new Date(hw.dueDate);
+                        const isOverdue = dueDate < new Date();
+                        
+                        html += `
+                            <div class="homework-card-large ${isOverdue ? 'overdue' : ''}">
+                                <div class="card-header">
+                                    <div class="homework-icon-large">📝</div>
+                                    <div>
+                                        <h3>${hw.title}</h3>
+                                        <span class="subject-tag">${hw.subject || 'Homework'}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p>${hw.description ? hw.description.substring(0, 100) + '...' : 'Click to see details'}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="due-date ${isOverdue ? 'overdue' : ''}">
+                                        <i class="fas fa-clock"></i>
+                                        Due: ${formatDate(hw.dueDate)}
+                                        ${isOverdue ? '⚠️ Late!' : ''}
+                                    </div>
+                                    <button class="btn-primary" onclick="openHomework('${hw._id}')">
+                                        Do It! 
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+
+                if (completed.length > 0) {
+                    html += '<div class="homework-section"><h2>✅ Completed</h2><div class="homework-cards">';
+                    completed.forEach(hw => {
+                        html += `
+                            <div class="homework-card-large completed">
+                                <div class="card-header">
+                                    <div class="homework-icon-large">✅</div>
+                                    <div>
+                                        <h3>${hw.title}</h3>
+                                        <span class="subject-tag completed">${hw.subject || 'Homework'}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p>Great job! You finished this!</p>
+                                    ${hw.grade !== undefined ? 
+                                        `<p class="grade-display">⭐ Grade: ${hw.grade}/${hw.maxPoints || 100}</p>` : 
+                                        '<p class="grade-display">Teacher is checking...</p>'
+                                    }
+                                </div>
+                                ${hw.feedback ? 
+                                    `<div class="teacher-message">
+                                        <strong>💬 Teacher says:</strong>
+                                        <p>${hw.feedback}</p>
+                                    </div>` : ''
+                                }
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading homework:', error);
+                document.getElementById('homeworkList').innerHTML = 
+                    '<div class="no-data">Could not load homework</div>';
+            }
+        }
+
+        async function openHomework(homeworkId) {
+            try {
+                const response = await apiRequest(`/student/homework/${homeworkId}`);
+                currentHomework = response.data;
+
+                document.getElementById('modalTitle').textContent = currentHomework.title;
+                document.getElementById('homeworkDescription').textContent = 
+                    currentHomework.description || 'No description provided';
+                document.getElementById('homeworkDueDate').textContent = 
+                    formatDate(currentHomework.dueDate);
+                document.getElementById('submissionContent').value = '';
+                document.getElementById('submissionFile').value = '';
+
+                document.getElementById('homeworkModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading homework:', error);
+                showNotification('Could not load homework', 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('homeworkModal').style.display = 'none';
+            currentHomework = null;
+        }
+
+        async function submitHomework() {
+            if (!currentHomework) return;
+
+            const content = document.getElementById('submissionContent').value.trim();
+            
+            if (!content) {
+                showNotification('Please write your answer!', 'warning');
+                return;
+            }
+
+            try {
+                const data = {
+                    homeworkId: currentHomework._id,
+                    content: content,
+                    submittedAt: new Date().toISOString()
+                };
+
+                await apiRequest('/student/homework/submit', 'POST', data);
+                
+                showNotification('Great job! Homework submitted! 🎉', 'success');
+                closeModal();
+                await loadHomework();
+            } catch (error) {
+                console.error('Error submitting homework:', error);
+                showNotification('Could not submit. Try again!', 'error');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadHomework);
+    </script>
+</body>
+</html>

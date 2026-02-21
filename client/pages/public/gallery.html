@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Gallery - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../src/css/global-styles.css">
+    <link rel="stylesheet" href="../../src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="../../src/components/header.js" defer></script>
+    <script src="../../src/components/footer.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../../src/js/main.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-pink-50 to-purple-50">
+    <app-header></app-header>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="bg-purple-100 text-purple-600 px-4 py-2 rounded-full text-sm font-bold">📸 Gallery</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">Moments of <span class="text-purple-600">Joy & Learning</span></h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="row-span-2 col-span-2">
+                    <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&h=600&fit=crop" alt="Gallery 1" class="w-full h-full object-cover rounded-3xl hover:scale-105 transition duration-300 shadow-lg">
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=300&fit=crop" alt="Gallery 2" class="w-full h-full object-cover rounded-2xl hover:scale-105 transition duration-300 shadow-lg">
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=300&h=300&fit=crop" alt="Gallery 3" class="w-full h-full object-cover rounded-2xl hover:scale-105 transition duration-300 shadow-lg">
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=300&h=300&fit=crop" alt="Gallery 4" class="w-full h-full object-cover rounded-2xl hover:scale-105 transition duration-300 shadow-lg">
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop" alt="Gallery 5" class="w-full h-full object-cover rounded-2xl hover:scale-105 transition duration-300 shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</body>
+</html>

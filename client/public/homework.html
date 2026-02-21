@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Homework Portal - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind (for existing content) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/global-styles.css">
+    <link rel="stylesheet" href="src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/config.js"></script>
+    <script src="src/components/header.js" defer></script>
+    <script src="src/components/footer.js" defer></script>
+    <script src="src/js/main.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <app-header></app-header>
+
+    <!-- Homework Platform -->
+    <section id="homework" class="py-20 bg-white min-h-[70vh]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-bold">📚 Learning Portal</span>
+                <h2 class="font-fredoka text-4xl mt-4 text-gray-800">Homework & <span class="text-orange-500">Activity Center</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Login Card -->
+                <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-xl">
+                    <h3 class="font-fredoka text-2xl mb-6">Parent Portal</h3>
+                    <form id="parentLogin" class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-2">Student ID</label>
+                            <input type="text" placeholder="Enter Student ID" class="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">Password</label>
+                            <input type="password" placeholder="Enter Password" class="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        </div>
+                        <button type="button" onclick="showHomework()" class="w-full bg-yellow-400 text-yellow-900 py-3 rounded-xl font-bold hover:bg-yellow-300 transition">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Homework List -->
+                <div class="md:col-span-2 bg-gray-50 rounded-3xl p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-fredoka text-2xl text-gray-800">📋 This Week's Activities</h3>
+                        <select class="bg-white border rounded-xl px-4 py-2 text-gray-600">
+                            <option>All Classes</option>
+                            <option>Toddlers</option>
+                            <option>Pre-K</option>
+                            <option>Kindergarten</option>
+                        </select>
+                    </div>
+                    
+                    <div id="homeworkList" class="space-y-4">
+                        <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border-l-4 border-green-400">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">🔤</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Letter A Tracing</h4>
+                                <p class="text-sm text-gray-500">Pre-K • Due: Sunday</p>
+                            </div>
+                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Easy</span>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border-l-4 border-yellow-400">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">🔢</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Count to 10</h4>
+                                <p class="text-sm text-gray-500">Kindergarten • Due: Monday</p>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">Medium</span>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border-l-4 border-pink-400">
+                            <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">🎨</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Color Family Drawing</h4>
+                                <p class="text-sm text-gray-500">All Classes • Due: Tuesday</p>
+                            </div>
+                            <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-sm">Creative</span>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border-l-4 border-blue-400">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">📖</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Storytime: The Rainbow Fish</h4>
+                                <p class="text-sm text-gray-500">Pre-K • Due: Wednesday</p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">Reading</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+
+    <script>
+        // Check if user is logged in as a student
+        (function checkStudentAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                // Redirect to login if not authenticated
+                alert('Please login as a student to access homework.');
+                window.location.href = '../pages/auth/login.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            if (userData.role !== 'student') {
+                // Redirect non-students to their dashboard or home
+                alert('Homework is only accessible to students.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Load student's homework
+            loadStudentHomework(userData);
+        })();
+
+        async function loadStudentHomework(userData) {
+            try {
+                // Call API to get student homework
+                const homework = await api.student.getHomework();
+
+                if (homework.status === 'success' && homework.data) {
+                    displayHomework(homework.data);
+                }
+            } catch (error) {
+                console.error('Error loading homework:', error);
+            }
+        }
+
+        function displayHomework(homeworkList) {
+            const container = document.getElementById('homeworkList');
+            if (!homeworkList || homeworkList.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">No homework assigned yet!</p>';
+                return;
+            }
+
+            container.innerHTML = homeworkList.map(hw => {
+                const dueDate = new Date(hw.dueDate).toLocaleDateString();
+                const statusColor = hw.status === 'completed' ? 'green' : hw.status === 'submitted' ? 'blue' : 'yellow';
+
+                return `
+                    <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border-l-4 border-${statusColor}-400">
+                        <div class="w-12 h-12 bg-${statusColor}-100 rounded-xl flex items-center justify-center">
+                            <span class="text-2xl">${hw.subject === 'Math' ? '🔢' : hw.subject === 'English' ? '🔤' : '📖'}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${hw.title}</h4>
+                            <p class="text-sm text-gray-500">${hw.subject} • Due: ${dueDate}</p>
+                        </div>
+                        <span class="bg-${statusColor}-100 text-${statusColor}-600 px-3 py-1 rounded-full text-sm">${hw.status}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

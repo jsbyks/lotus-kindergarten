@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Letters - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../student.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .game-header h1 {
+            font-size: 48px;
+            color: #FF6B9D;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .score-display {
+            font-size: 32px;
+            color: #764ba2;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .letter-display {
+            font-size: 200px;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin: 40px 0;
+            text-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+            animation: letterPulse 2s infinite;
+        }
+
+        @keyframes letterPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .question-text {
+            font-size: 36px;
+            margin: 30px 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .letter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 40px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .letter-button {
+            padding: 30px;
+            font-size: 48px;
+            font-weight: bold;
+            border: 4px solid #FF6B9D;
+            border-radius: 20px;
+            background: white;
+            color: #FF6B9D;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .letter-button:hover {
+            transform: scale(1.2) rotate(5deg);
+            background: #FF6B9D;
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        .letter-button.correct {
+            background: #00F5D4;
+            border-color: #00F5D4;
+            color: white;
+            animation: correctBounce 0.5s;
+        }
+
+        .letter-button.wrong {
+            animation: shake 0.5s;
+        }
+
+        @keyframes correctBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            font-size: 48px;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+
+        .word-example {
+            font-size: 28px;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        .word-example .emoji {
+            font-size: 40px;
+        }
+
+        .btn-game {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #FF6B9D, #C770F0);
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-game:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #4FACFE, #00F2B8);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🔤 Learn ABC!</h1>
+            <div class="score-display">Score: <span id="score">0</span> 🌟</div>
+        </div>
+
+        <div id="gameArea">
+            <div class="question-text" id="question">Click Start to Learn!</div>
+            <div class="letter-display" id="letterDisplay"></div>
+            <div class="word-example" id="wordExample"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="letter-options" id="letterOptions"></div>
+        </div>
+
+        <div class="game-controls">
+            <button class="btn-game" id="startBtn" onclick="startGame()">Start Learning!</button>
+            <button class="btn-game" id="nextBtn" onclick="nextQuestion()" style="display:none;">Next Letter!</button>
+            <button class="btn-game btn-back" onclick="location.href='../games.html'">Back to Games</button>
+        </div>
+    </div>
+
+    <script>
+        const alphabet = [
+            { letter: 'A', word: 'Apple', emoji: '🍎' },
+            { letter: 'B', word: 'Ball', emoji: '⚽' },
+            { letter: 'C', word: 'Cat', emoji: '🐱' },
+            { letter: 'D', word: 'Dog', emoji: '🐶' },
+            { letter: 'E', word: 'Elephant', emoji: '🐘' },
+            { letter: 'F', word: 'Fish', emoji: '🐠' },
+            { letter: 'G', word: 'Grapes', emoji: '🍇' },
+            { letter: 'H', word: 'House', emoji: '🏠' },
+            { letter: 'I', word: 'Ice Cream', emoji: '🍦' },
+            { letter: 'J', word: 'Juice', emoji: '🧃' },
+            { letter: 'K', word: 'Kite', emoji: '🪁' },
+            { letter: 'L', word: 'Lion', emoji: '🦁' },
+            { letter: 'M', word: 'Moon', emoji: '🌙' },
+            { letter: 'N', word: 'Nose', emoji: '👃' },
+            { letter: 'O', word: 'Orange', emoji: '🍊' },
+            { letter: 'P', word: 'Pizza', emoji: '🍕' },
+            { letter: 'Q', word: 'Queen', emoji: '👸' },
+            { letter: 'R', word: 'Rainbow', emoji: '🌈' },
+            { letter: 'S', word: 'Sun', emoji: '☀️' },
+            { letter: 'T', word: 'Tree', emoji: '🌳' },
+            { letter: 'U', word: 'Umbrella', emoji: '☂️' },
+            { letter: 'V', word: 'Van', emoji: '🚐' },
+            { letter: 'W', word: 'Water', emoji: '💧' },
+            { letter: 'X', word: 'Xylophone', emoji: '🎹' },
+            { letter: 'Y', word: 'Yellow', emoji: '💛' },
+            { letter: 'Z', word: 'Zebra', emoji: '🦓' }
+        ];
+
+        let score = 0;
+        let currentLetter = null;
+        let gameActive = false;
+
+        function startGame() {
+            score = 0;
+            updateScore();
+            document.getElementById('startBtn').style.display = 'none';
+            gameActive = true;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').textContent = '';
+            
+            // Pick a random letter
+            currentLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            
+            // Display the letter
+            document.getElementById('letterDisplay').textContent = currentLetter.letter;
+            
+            // Show example word
+            document.getElementById('wordExample').innerHTML = 
+                `<span class="emoji">${currentLetter.emoji}</span> ${currentLetter.letter} for ${currentLetter.word}`;
+            
+            // Update question
+            document.getElementById('question').textContent = 
+                `Find the letter ${currentLetter.letter}!`;
+            
+            // Create options (4 random letters including correct one)
+            let options = [currentLetter];
+            while (options.length < 6) {
+                const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if (!options.find(opt => opt.letter === randomLetter.letter)) {
+                    options.push(randomLetter);
+                }
+            }
+            
+            // Shuffle options
+            options = options.sort(() => Math.random() - 0.5);
+            
+            // Display letter options
+            const optionsContainer = document.getElementById('letterOptions');
+            optionsContainer.innerHTML = options.map(opt => `
+                <button class="letter-button" onclick="checkAnswer('${opt.letter}')"
+                        data-letter="${opt.letter}">
+                    ${opt.letter}
+                </button>
+            `).join('');
+        }
+
+        function checkAnswer(selected) {
+            if (!gameActive) return;
+            
+            const buttons = document.querySelectorAll('.letter-button');
+            const selectedButton = Array.from(buttons).find(
+                btn => btn.dataset.letter === selected
+            );
+            
+            if (selected === currentLetter.letter) {
+                // Correct answer
+                score += 10;
+                updateScore();
+                document.getElementById('feedback').textContent = '🎉 Great! You found it!';
+                selectedButton.classList.add('correct');
+                
+                setTimeout(() => {
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                }, 1000);
+                
+            } else {
+                // Wrong answer
+                document.getElementById('feedback').textContent = '😊 Try again!';
+                selectedButton.classList.add('wrong');
+                setTimeout(() => selectedButton.classList.remove('wrong'), 500);
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (gameActive && e.key.match(/^[a-zA-Z]$/)) {
+                checkAnswer(e.key.toUpperCase());
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Fun - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../student.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .game-header h1 {
+            font-size: 48px;
+            color: #FF6B9D;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .canvas-container {
+            margin: 30px auto;
+            border: 5px solid #FF6B9D;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            background: white;
+            display: inline-block;
+            position: relative;
+        }
+
+        #drawingCanvas {
+            cursor: crosshair;
+            display: block;
+            border-radius: 15px;
+            touch-action: none;
+        }
+
+        .color-palette {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid white;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .color-btn.active {
+            border-color: #333;
+            transform: scale(1.3);
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.1);
+        }
+
+        .brush-sizes {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .size-btn {
+            padding: 15px 30px;
+            border: 3px solid #764ba2;
+            border-radius: 50px;
+            background: white;
+            color: #764ba2;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .size-btn:hover {
+            background: #764ba2;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .size-btn.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .tools {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-btn.clear {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+        }
+
+        .tool-btn.save {
+            background: linear-gradient(135deg, #00F5D4, #00F2B8);
+            color: white;
+        }
+
+        .tool-btn.eraser {
+            background: linear-gradient(135deg, #C770F0, #764ba2);
+            color: white;
+        }
+
+        .tool-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .tool-btn.active {
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-back {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #4FACFE, #00F2B8);
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-back:hover {
+            transform: scale(1.1);
+        }
+
+        .message {
+            font-size: 24px;
+            color: #764ba2;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>✏️ Draw & Paint!</h1>
+            <p class="message">Be creative! Draw anything you like!</p>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="drawingCanvas" width="800" height="500"></canvas>
+        </div>
+
+        <div class="color-palette">
+            <div class="color-btn active" style="background-color: #000000;" onclick="selectColor('#000000')"></div>
+            <div class="color-btn" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></div>
+            <div class="color-btn" style="background-color: #FF6B9D;" onclick="selectColor('#FF6B9D')"></div>
+            <div class="color-btn" style="background-color: #FFA500;" onclick="selectColor('#FFA500')"></div>
+            <div class="color-btn" style="background-color: #FFD700;" onclick="selectColor('#FFD700')"></div>
+            <div class="color-btn" style="background-color: #00FF00;" onclick="selectColor('#00FF00')"></div>
+            <div class="color-btn" style="background-color: #00F5D4;" onclick="selectColor('#00F5D4')"></div>
+            <div class="color-btn" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></div>
+            <div class="color-btn" style="background-color: #4FACFE;" onclick="selectColor('#4FACFE')"></div>
+            <div class="color-btn" style="background-color: #800080;" onclick="selectColor('#800080')"></div>
+            <div class="color-btn" style="background-color: #C770F0;" onclick="selectColor('#C770F0')"></div>
+            <div class="color-btn" style="background-color: #8B4513;" onclick="selectColor('#8B4513')"></div>
+        </div>
+
+        <div class="brush-sizes">
+            <button class="size-btn" onclick="selectSize(5)">Small</button>
+            <button class="size-btn active" onclick="selectSize(10)">Medium</button>
+            <button class="size-btn" onclick="selectSize(20)">Large</button>
+            <button class="size-btn" onclick="selectSize(30)">X-Large</button>
+        </div>
+
+        <div class="tools">
+            <button class="tool-btn eraser" onclick="toggleEraser()">
+                🧽 Eraser
+            </button>
+            <button class="tool-btn clear" onclick="clearCanvas()">
+                🗑️ Clear All
+            </button>
+            <button class="tool-btn save" onclick="saveDrawing()">
+                💾 Save Drawing
+            </button>
+        </div>
+
+        <button class="btn-back" onclick="location.href='../games.html'">Back to Games</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let isDrawing = false;
+        let currentColor = '#000000';
+        let brushSize = 10;
+        let isEraser = false;
+
+        // Set canvas background to white
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Mouse events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch events for tablets/phones
+        canvas.addEventListener('touchstart', handleTouch);
+        canvas.addEventListener('touchmove', handleTouch);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = isEraser ? 'white' : currentColor;
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function selectColor(color) {
+            currentColor = color;
+            isEraser = false;
+            
+            // Update UI
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelector('.tool-btn.eraser').classList.remove('active');
+        }
+
+        function selectSize(size) {
+            brushSize = size;
+            
+            // Update UI
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function toggleEraser() {
+            isEraser = !isEraser;
+            const btn = document.querySelector('.tool-btn.eraser');
+            
+            if (isEraser) {
+                btn.classList.add('active');
+                document.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function clearCanvas() {
+            if (confirm('Clear your drawing?')) {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function saveDrawing() {
+            const link = document.createElement('a');
+            link.download = 'my-drawing.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            alert('🎨 Drawing saved! Ask your parent to find it!');
+        }
+    </script>
+</body>
+</html>

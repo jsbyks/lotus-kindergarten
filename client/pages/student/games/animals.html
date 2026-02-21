@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Sounds - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../student.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .game-header h1 {
+            font-size: 48px;
+            color: #00F5D4;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .score-display {
+            font-size: 32px;
+            color: #764ba2;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .animal-display {
+            margin: 40px 0;
+        }
+
+        .animal-image {
+            font-size: 180px;
+            animation: animalBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes animalBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .question-text {
+            font-size: 36px;
+            margin: 30px 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .sound-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .sound-button {
+            padding: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            border: 4px solid #00F5D4;
+            border-radius: 20px;
+            background: white;
+            color: #00F5D4;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sound-button:hover {
+            transform: scale(1.1);
+            background: #00F5D4;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4);
+        }
+
+        .sound-button.correct {
+            background: #FEE440;
+            border-color: #FEE440;
+            color: #333;
+            animation: correctPulse 0.5s;
+        }
+
+        .sound-button.wrong {
+            animation: shake 0.5s;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            font-size: 48px;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+
+        .btn-game {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #00F5D4, #00F2B8);
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-game:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 245, 212, 0.5);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .play-sound-btn {
+            font-size: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .play-sound-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .play-sound-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🐶 Animal Sounds!</h1>
+            <div class="score-display">Score: <span id="score">0</span> 🌟</div>
+        </div>
+
+        <div id="gameArea">
+            <div class="question-text" id="question">Click Start to Play!</div>
+            
+            <div class="animal-display">
+                <div class="animal-image" id="animalImage"></div>
+            </div>
+
+            <button class="play-sound-btn" id="playSoundBtn" onclick="playSound()" style="display:none;">
+                🔊
+            </button>
+
+            <div class="feedback" id="feedback"></div>
+            <div class="sound-options" id="soundOptions"></div>
+        </div>
+
+        <div class="game-controls">
+            <button class="btn-game" id="startBtn" onclick="startGame()">Start Game!</button>
+            <button class="btn-game" id="nextBtn" onclick="nextQuestion()" style="display:none;">Next Animal!</button>
+            <button class="btn-game btn-back" onclick="location.href='../games.html'">Back to Games</button>
+        </div>
+    </div>
+
+    <script>
+        const animals = [
+            { name: 'Dog', emoji: '🐶', sound: 'Woof! Woof!', alternatives: ['Bark! Bark!', 'Arf! Arf!'] },
+            { name: 'Cat', emoji: '🐱', sound: 'Meow! Meow!', alternatives: ['Purr! Purr!'] },
+            { name: 'Cow', emoji: '🐮', sound: 'Moo! Moo!', alternatives: [] },
+            { name: 'Pig', emoji: '🐷', sound: 'Oink! Oink!', alternatives: [] },
+            { name: 'Duck', emoji: '🦆', sound: 'Quack! Quack!', alternatives: [] },
+            { name: 'Sheep', emoji: '🐑', sound: 'Baa! Baa!', alternatives: [] },
+            { name: 'Horse', emoji: '🐴', sound: 'Neigh! Neigh!', alternatives: [] },
+            { name: 'Rooster', emoji: '🐓', sound: 'Cock-a-doodle-doo!', alternatives: [] },
+            { name: 'Bee', emoji: '🐝', sound: 'Buzz! Buzz!', alternatives: [] },
+            { name: 'Lion', emoji: '🦁', sound: 'Roar! Roar!', alternatives: [] },
+            { name: 'Elephant', emoji: '🐘', sound: 'Trumpet! Trumpet!', alternatives: [] },
+            { name: 'Frog', emoji: '🐸', sound: 'Ribbit! Ribbit!', alternatives: ['Croak! Croak!'] }
+        ];
+
+        let score = 0;
+        let currentAnimal = null;
+        let gameActive = false;
+
+        function startGame() {
+            score = 0;
+            updateScore();
+            document.getElementById('startBtn').style.display = 'none';
+            gameActive = true;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('playSoundBtn').style.display = 'flex';
+            
+            // Pick a random animal
+            currentAnimal = animals[Math.floor(Math.random() * animals.length)];
+            
+            // Display the animal
+            document.getElementById('animalImage').textContent = currentAnimal.emoji;
+            
+            // Update question
+            document.getElementById('question').textContent = 
+                `What sound does the ${currentAnimal.name} make?`;
+            
+            // Create options (correct sound + wrong sounds)
+            let options = [currentAnimal.sound];
+            
+            // Add 3 wrong sounds from other animals
+            let wrongOptions = animals
+                .filter(a => a.name !== currentAnimal.name)
+                .map(a => a.sound)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+            
+            options = [...options, ...wrongOptions];
+            
+            // Shuffle options
+            options = options.sort(() => Math.random() - 0.5);
+            
+            // Display sound options
+            const optionsContainer = document.getElementById('soundOptions');
+            optionsContainer.innerHTML = options.map(sound => `
+                <button class="sound-button" onclick="checkAnswer('${sound.replace(/'/g, "\\'")}')">
+                    ${sound}
+                </button>
+            `).join('');
+        }
+
+        function playSound() {
+            // Visual feedback for "playing" sound
+            const btn = document.getElementById('playSoundBtn');
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 200);
+            
+            // Show the sound text briefly as feedback
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = `🔊 "${currentAnimal.sound}"`;
+            feedback.style.color = '#667eea';
+            setTimeout(() => {
+                if (feedback.textContent === `🔊 "${currentAnimal.sound}"`) {
+                    feedback.textContent = '';
+                }
+            }, 2000);
+        }
+
+        function checkAnswer(selected) {
+            if (!gameActive) return;
+            
+            const buttons = document.querySelectorAll('.sound-button');
+            const selectedButton = Array.from(buttons).find(
+                btn => btn.textContent.trim() === selected
+            );
+            
+            // Check if answer is correct (including alternatives)
+            const isCorrect = selected === currentAnimal.sound || 
+                             currentAnimal.alternatives.includes(selected);
+            
+            if (isCorrect) {
+                // Correct answer
+                score += 10;
+                updateScore();
+                document.getElementById('feedback').textContent = '🎉 Perfect! That\'s right!';
+                document.getElementById('feedback').style.color = '#00F5D4';
+                selectedButton.classList.add('correct');
+                document.getElementById('playSoundBtn').style.display = 'none';
+                
+                setTimeout(() => {
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                }, 1000);
+                
+            } else {
+                // Wrong answer
+                document.getElementById('feedback').textContent = '😊 Try again! Listen carefully!';
+                document.getElementById('feedback').style.color = '#FF6B6B';
+                selectedButton.classList.add('wrong');
+                setTimeout(() => selectedButton.classList.remove('wrong'), 500);
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+    </script>
+</body>
+</html>

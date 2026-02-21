@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Stars - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="student-container">
+        <aside class="student-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">🎓</div>
+                <h2>My Learning</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="games.html" class="nav-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="homework.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="achievements.html" class="nav-item active">
+                    <i class="fas fa-trophy"></i>
+                    <span>My Stars</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>About Me</span>
+                </a>
+                <a href="javascript:void(0)" onclick="logout()" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Exit</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="student-main">
+            <header class="student-header">
+                <div class="welcome-message">
+                    <h1>⭐ My Stars</h1>
+                    <p>Look at all the stars you earned!</p>
+                </div>
+                <div class="student-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="achievements-summary">
+                    <div class="total-stars">
+                        <div class="star-icon">⭐</div>
+                        <div>
+                            <h2 id="totalStars">0</h2>
+                            <p>Total Stars</p>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <p>Keep going! You're doing great! 🎉</p>
+                    </div>
+                </div>
+
+                <div class="achievements-grid" id="achievementsGrid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading stars...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="student-utils.js"></script>
+    <script>
+        async function loadAchievements() {
+            if (!await checkAuth()) return;
+
+            try {
+                const response = await apiRequest('/student/achievements');
+                const achievements = response.data || [];
+                
+                document.getElementById('totalStars').textContent = achievements.length;
+
+                const grid = document.getElementById('achievementsGrid');
+                
+                if (achievements.length === 0) {
+                    grid.innerHTML = `
+                        <div class="no-data large">
+                            <div class="emoji">⭐</div>
+                            <h2>No Stars Yet!</h2>
+                            <p>Complete homework and games to earn stars!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = achievements.map(achievement => `
+                    <div class="achievement-card earned">
+                        <div class="achievement-icon-large">${achievement.icon || '⭐'}</div>
+                        <h3>${achievement.name}</h3>
+                        <p>${achievement.description || 'Great work!'}</p>
+                        <div class="earned-date">
+                            <i class="fas fa-calendar"></i>
+                            ${formatDate(achievement.earnedAt)}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add locked achievements (coming soon)
+                const lockedAchievements = [
+                    { icon: '🏆', name: 'Super Star', description: 'Complete 10 homework' },
+                    { icon: '🎨', name: 'Artist', description: 'Play all art games' },
+                    { icon: '📚', name: 'Book Worm', description: 'Read 5 stories' },
+                    { icon: '🎮', name: 'Game Master', description: 'Play all games' }
+                ];
+
+                lockedAchievements.forEach(locked => {
+                    grid.innerHTML += `
+                        <div class="achievement-card locked">
+                            <div class="achievement-icon-large">${locked.icon}</div>
+                            <h3>${locked.name}</h3>
+                            <p>${locked.description}</p>
+                            <div class="lock-icon">🔒</div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+                document.getElementById('achievementsGrid').innerHTML = 
+                    '<div class="no-data">Could not load stars</div>';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadAchievements);
+    </script>
+</body>
+</html>

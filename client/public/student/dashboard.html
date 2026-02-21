@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../src/css/global-styles.css">
+    <link rel="stylesheet" href="../../src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../../src/components/header.js" defer></script>
+    <script src="../../src/components/footer.js" defer></script>
+    <script src="../../src/js/main.js" defer></script>
+    <script src="student-management.js" defer></script>
+
+    <style>
+        body {
+            font-family: 'Baloo 2', 'Fredoka', cursive;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .star-rating {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .star {
+            color: #FCD34D;
+            font-size: 1.5rem;
+        }
+
+        .attendance-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .attendance-day:hover {
+            transform: scale(1.1);
+        }
+
+        .attendance-present {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .attendance-absent {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .attendance-future {
+            background: #F3F4F6;
+            color: #9CA3AF;
+        }
+
+        .homework-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-submitted {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-graded {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-late {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50">
+    <app-header></app-header>
+
+    <div class="max-w-7xl mx-auto px-4 py-10 min-h-screen">
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-3xl p-8 shadow-2xl mb-10 text-white">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="relative">
+                    <img id="studentAvatar" src="https://images.pexels.com/photos/7100271/pexels-photo-7100271.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=128&w=128" alt="Student Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                    <div class="absolute -bottom-2 -right-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl bounce">
+                        ⭐
+                    </div>
+                </div>
+                <div class="flex-1 text-center md:text-left">
+                    <h1 id="welcomeMessage" class="font-fredoka text-5xl mb-2">Hello, Friend! 👋</h1>
+                    <p class="text-xl opacity-90 mb-4">Ready for a fun day of learning?</p>
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <span id="starsDisplay" class="bg-white/20 backdrop-blur-sm text-white px-5 py-3 rounded-full font-bold text-lg">
+                            ⭐ Loading...
+                        </span>
+                        <span id="levelDisplay" class="bg-white/20 backdrop-blur-sm text-white px-5 py-3 rounded-full font-bold text-lg">
+                            🏆 Loading...
+                        </span>
+                        <span id="classDisplay" class="bg-white/20 backdrop-blur-sm text-white px-5 py-3 rounded-full font-bold text-lg">
+                            🎒 Loading...
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-3xl p-4 shadow-xl mb-8">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button class="tab-button active" onclick="switchTab('homework')">
+                    <i class="fas fa-book mr-2"></i>My Homework
+                </button>
+                <button class="tab-button" onclick="switchTab('grades')">
+                    <i class="fas fa-star mr-2"></i>My Grades
+                </button>
+                <button class="tab-button" onclick="switchTab('attendance')">
+                    <i class="fas fa-calendar-check mr-2"></i>Attendance
+                </button>
+                <button class="tab-button" onclick="switchTab('announcements')">
+                    <i class="fas fa-bullhorn mr-2"></i>Announcements
+                </button>
+            </div>
+        </div>
+
+        <!-- Homework Tab -->
+        <div id="homeworkTab" class="tab-content active">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Homework List -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-3xl p-8 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-3xl text-purple-600">📚 My Homework</h2>
+                            <select id="homeworkFilter" class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-bold border-none outline-none">
+                                <option value="all">All</option>
+                                <option value="pending">To Do</option>
+                                <option value="submitted">Submitted</option>
+                                <option value="graded">Graded</option>
+                            </select>
+                        </div>
+                        <div id="homeworkList" class="space-y-4">
+                            <div class="text-center py-12">
+                                <div class="loading"></div>
+                                <p class="text-gray-500 mt-4">Loading homework...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-3xl p-6 shadow-xl text-white card-hover">
+                        <div class="text-5xl mb-3">✅</div>
+                        <div class="text-3xl font-bold mb-1" id="completedCount">0</div>
+                        <div class="text-green-100">Completed</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl p-6 shadow-xl text-white card-hover">
+                        <div class="text-5xl mb-3">⏰</div>
+                        <div class="text-3xl font-bold mb-1" id="pendingCount">0</div>
+                        <div class="text-yellow-100">To Do</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl p-6 shadow-xl text-white card-hover">
+                        <div class="text-5xl mb-3">📝</div>
+                        <div class="text-3xl font-bold mb-1" id="totalCount">0</div>
+                        <div class="text-blue-100">Total Homework</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Tab -->
+        <div id="gradesTab" class="tab-content">
+            <div class="bg-white rounded-3xl p-8 shadow-xl">
+                <h2 class="font-fredoka text-3xl text-purple-600 mb-6">⭐ My Grades</h2>
+                <div id="gradesList" class="space-y-4">
+                    <div class="text-center py-12">
+                        <div class="loading"></div>
+                        <p class="text-gray-500 mt-4">Loading grades...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Tab -->
+        <div id="attendanceTab" class="tab-content">
+            <div class="bg-white rounded-3xl p-8 shadow-xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-fredoka text-3xl text-purple-600">📅 My Attendance</h2>
+                    <div class="flex gap-4 items-center">
+                        <button onclick="changeMonth(-1)" class="bg-purple-100 text-purple-700 w-10 h-10 rounded-full font-bold hover:bg-purple-200 transition">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="currentMonth" class="font-bold text-lg text-gray-700">Loading...</span>
+                        <button onclick="changeMonth(1)" class="bg-purple-100 text-purple-700 w-10 h-10 rounded-full font-bold hover:bg-purple-200 transition">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Attendance Legend -->
+                <div class="flex flex-wrap gap-4 mb-6 justify-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg attendance-present"></div>
+                        <span class="text-gray-700">Present</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg attendance-absent"></div>
+                        <span class="text-gray-700">Absent</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg attendance-future"></div>
+                        <span class="text-gray-700">Future</span>
+                    </div>
+                </div>
+
+                <!-- Calendar -->
+                <div id="attendanceCalendar" class="mb-6">
+                    <div class="grid grid-cols-7 gap-2 text-center mb-2">
+                        <div class="font-bold text-purple-600">Sun</div>
+                        <div class="font-bold text-purple-600">Mon</div>
+                        <div class="font-bold text-purple-600">Tue</div>
+                        <div class="font-bold text-purple-600">Wed</div>
+                        <div class="font-bold text-purple-600">Thu</div>
+                        <div class="font-bold text-purple-600">Fri</div>
+                        <div class="font-bold text-purple-600">Sat</div>
+                    </div>
+                    <div id="calendarDays" class="grid grid-cols-7 gap-2">
+                        <!-- Calendar days will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Attendance Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-green-50 rounded-2xl p-4 text-center">
+                        <div class="text-3xl mb-2">😊</div>
+                        <div class="text-2xl font-bold text-green-600" id="presentDays">0</div>
+                        <div class="text-gray-600 text-sm">Present</div>
+                    </div>
+                    <div class="bg-red-50 rounded-2xl p-4 text-center">
+                        <div class="text-3xl mb-2">😔</div>
+                        <div class="text-2xl font-bold text-red-600" id="absentDays">0</div>
+                        <div class="text-gray-600 text-sm">Absent</div>
+                    </div>
+                    <div class="bg-blue-50 rounded-2xl p-4 text-center">
+                        <div class="text-3xl mb-2">📊</div>
+                        <div class="text-2xl font-bold text-blue-600" id="attendanceRate">0%</div>
+                        <div class="text-gray-600 text-sm">Rate</div>
+                    </div>
+                    <div class="bg-purple-50 rounded-2xl p-4 text-center">
+                        <div class="text-3xl mb-2">🎯</div>
+                        <div class="text-2xl font-bold text-purple-600" id="streak">0</div>
+                        <div class="text-gray-600 text-sm">Streak</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements Tab -->
+        <div id="announcementsTab" class="tab-content">
+            <div class="bg-white rounded-3xl p-8 shadow-xl">
+                <h2 class="font-fredoka text-3xl text-purple-600 mb-6">📢 Announcements</h2>
+                <div id="announcementsList" class="space-y-4">
+                    <div class="text-center py-12">
+                        <div class="loading"></div>
+                        <p class="text-gray-500 mt-4">Loading announcements...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homework Submission Modal -->
+    <div id="submissionModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50" onclick="closeSubmissionModal(event)">
+        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-fredoka text-2xl text-purple-600">Submit Homework</h3>
+                <button onclick="closeSubmissionModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="submissionForm">
+                <!-- Form will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <app-footer></app-footer>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active state from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            // Add active state to clicked button
+            event.target.classList.add('active');
+
+            // Load data for the selected tab if needed
+            if (tabName === 'attendance' && !window.attendanceLoaded) {
+                loadAttendanceData();
+            } else if (tabName === 'announcements' && !window.announcementsLoaded) {
+                loadAnnouncements();
+            }
+        }
+
+        // Initialize dashboard on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeDashboard();
+        });
+    </script>
+</body>
+</html>

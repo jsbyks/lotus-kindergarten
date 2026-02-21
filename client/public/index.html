@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪷 Lotus Kindergarten | Doha, Qatar - Where Little Minds Bloom!</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind (for existing content) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/global-styles.css">
+    <link rel="stylesheet" href="src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/config.js"></script>
+    <script src="src/components/header.js" defer></script>
+    <script src="src/components/footer.js" defer></script>
+    <script src="src/js/main.js" defer></script>
+</head>
+<body>
+    <app-header></app-header>
+
+    <!-- Hero Section with Carousel -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 text-6xl float-animation" style="animation-delay: 0s;">🎈</div>
+        <div class="absolute top-40 right-20 text-5xl float-animation" style="animation-delay: 1s;">⭐</div>
+        <div class="absolute bottom-40 left-20 text-4xl float-animation" style="animation-delay: 2s;">🦋</div>
+        <div class="absolute bottom-20 right-10 text-5xl float-animation" style="animation-delay: 0.5s;">🌈</div>
+        
+        <div class="max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
+            <div class="z-10">
+                <div class="inline-block bg-yellow-300 text-yellow-800 px-4 py-1 rounded-full text-sm font-bold mb-4" id="heroBadge">
+                    🏆 Best Kindergarten in Doha 2024
+                </div>
+                <h1 class="font-fredoka text-5xl md:text-6xl mb-6">
+                    <span class="rainbow-text">Where Little</span><br>
+                    <span class="text-purple-600">Minds Bloom!</span>
+                </h1>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    Welcome to Lotus Kindergarten, where every child's potential blossoms in a nurturing, 
+                    fun-filled environment. We provide world-class early education in the heart of Doha, Qatar.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="contact.html" class="btn-bubbly">
+                        <i class="fas fa-pencil-alt mr-2"></i>Enroll Today
+                    </a>
+                    <a href="about.html" class="btn-bubbly bg-white" style="--lotus-pink: #00BBF9; --lotus-purple: #00F5D4;">
+                        <i class="fas fa-play-circle mr-2"></i>Virtual Tour
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="flex gap-8 mt-10">
+                    <div class="text-center">
+                        <p class="font-fredoka text-3xl text-purple-600" id="statExperience">15+</p>
+                        <p class="text-gray-500 text-sm">Years Experience</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-fredoka text-3xl text-pink-500" id="statStudents">500+</p>
+                        <p class="text-gray-500 text-sm">Happy Students</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-fredoka text-3xl text-blue-500" id="statTeachers">50+</p>
+                        <p class="text-gray-500 text-sm">Expert Teachers</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carousel -->
+            <div class="relative flex flex-col items-center">
+                <div class="blob-wrapper">
+                <div class="blob bg-gradient-to-br from-purple-300 to-pink-300 w-full h-96 flex items-center justify-center overflow-hidden">
+                    <div class="carousel w-full h-full relative">
+                        <div class="carousel-slide active">
+                            <img src="https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Happy children learning" class="w-full h-full object-cover rounded-3xl">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="https://images.pexels.com/photos/8613319/pexels-photo-8613319.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Kids playing" class="w-full h-full object-cover rounded-3xl">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="https://images.pexels.com/photos/8422174/pexels-photo-8422174.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Art activities" class="w-full h-full object-cover rounded-3xl">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="https://images.pexels.com/photos/8613146/pexels-photo-8613146.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Outdoor play" class="w-full h-full object-cover rounded-3xl">
+                        </div>
+                    </div>
+                </div>
+                </div><!-- /.blob-wrapper -->
+                <!-- Carousel Dots -->
+                <div class="flex justify-center gap-2 mt-4">
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-purple-500" onclick="goToSlide(0)"></button>
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-purple-200" onclick="goToSlide(1)"></button>
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-purple-200" onclick="goToSlide(2)"></button>
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-purple-200" onclick="goToSlide(3)"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Strip -->
+    <section class="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 py-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-8 text-white">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                    <span class="font-semibold">Safe Environment</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-book-open text-2xl"></i>
+                    <span class="font-semibold">Modern Curriculum</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-utensils text-2xl"></i>
+                    <span class="font-semibold">Healthy Meals</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-bus text-2xl"></i>
+                    <span class="font-semibold">Transport Service</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-camera text-2xl"></i>
+                    <span class="font-semibold">CCTV Monitored</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+
+    <script>
+        // Apply branding config to hero section
+        document.addEventListener('DOMContentLoaded', () => {
+            const C = window.SCHOOL_CONFIG;
+            if (!C) return;
+            const year = new Date().getFullYear();
+            const badge = document.getElementById('heroBadge');
+            if (badge) badge.textContent = `🏆 Best Kindergarten in ${C.city} ${year}`;
+            const s = C.stats || {};
+            if (s.experience) document.getElementById('statExperience').textContent = s.experience;
+            if (s.students)   document.getElementById('statStudents').textContent   = s.students;
+            if (s.teachers)   document.getElementById('statTeachers').textContent   = s.teachers;
+        });
+    </script>
+</body>
+</html>

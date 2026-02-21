@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Admin Dashboard - Lotus Kindergarten | Doha, Qatar</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&family=Bubblegum+Sans&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../src/css/global-styles.css">
+    <link rel="stylesheet" href="../../src/css/kindergarten-ui.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../../src/components/header.js" defer></script>
+    <script src="../../src/components/footer.js" defer></script>
+    <script src="../../src/js/main.js" defer></script>
+    <script src="admin-management.js"></script>
+</head>
+<body class="bg-gray-50">
+    <app-header></app-header>
+
+    <div class="max-w-7xl mx-auto px-4 py-10 min-h-screen">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="font-fredoka text-3xl text-purple-800">Admin Dashboard</h1>
+            <div class="text-right">
+                <p class="text-sm text-gray-500">Welcome back,</p>
+                <p class="font-bold text-gray-800" id="adminName">Admin</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg h-fit">
+                <nav class="space-y-2">
+                    <a href="#" data-section="dashboard" class="nav-link flex items-center gap-3 px-4 py-3 bg-purple-100 text-purple-700 rounded-xl font-bold">
+                        <i class="fas fa-chart-pie w-6"></i> Dashboard
+                    </a>
+                    <a href="#" data-section="users" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-users w-6"></i> Users
+                    </a>
+                    <a href="#" data-section="students" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-child w-6"></i> Students
+                    </a>
+                    <a href="#" data-section="teachers" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-chalkboard-teacher w-6"></i> Teachers
+                    </a>
+                    <a href="#" data-section="classes" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-school w-6"></i> Classes
+                    </a>
+                    <a href="#" data-section="parents" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-user-friends w-6"></i> Parents
+                    </a>
+                    <a href="#" data-section="announcements" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-purple-600 rounded-xl transition">
+                        <i class="fas fa-bullhorn w-6"></i> Announcements
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div id="mainContent" class="md:col-span-3 space-y-8">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Students</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalStudents">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-child absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Teachers</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalTeachers">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-chalkboard-teacher absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-400 to-purple-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Classes</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalClasses">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-school absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                </div>
+
+                <!-- Additional Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-pink-400 to-pink-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Parents</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalParents">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-users absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Homework</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalHomework">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-book absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-400 to-indigo-600 p-6 rounded-2xl text-white shadow-lg relative">
+                        <h3 class="text-lg font-semibold opacity-80">Total Users</h3>
+                        <p class="text-4xl font-bold mt-2" id="totalUsers">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                        <i class="fas fa-user-friends absolute top-6 right-6 text-4xl opacity-20"></i>
+                    </div>
+                </div>
+                
+                <!-- Recent Users -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <h3 class="font-fredoka text-xl text-gray-800 mb-6">Recent Users</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentUsersTable" class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                        <i class="fas fa-spinner fa-spin text-2xl"></i>
+                                        <p class="mt-2">Loading recent users...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer></app-footer>
+
+    <!-- Dashboard Script -->
+    <script>
+        // Check admin authentication
+        (function checkAdminAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Please login as an administrator to access this page.');
+                window.location.href = '../../pages/auth/login.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            if (userData.role !== 'admin') {
+                alert('Access denied. This page is only accessible to administrators.');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set admin name
+            const adminName = document.getElementById('adminName');
+            if (adminName) {
+                adminName.textContent = `${userData.firstName} ${userData.lastName}`;
+            }
+
+            // Load dashboard data
+            loadDashboardStats();
+        })();
+
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/dashboard/stats', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load dashboard statistics');
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success' && data.data && data.data.stats) {
+                    const stats = data.data.stats;
+
+                    // Update statistics
+                    document.getElementById('totalStudents').textContent = stats.totalStudents || 0;
+                    document.getElementById('totalTeachers').textContent = stats.totalTeachers || 0;
+                    document.getElementById('totalParents').textContent = stats.totalParents || 0;
+                    document.getElementById('totalClasses').textContent = stats.totalClasses || 0;
+                    document.getElementById('totalHomework').textContent = stats.totalHomework || 0;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+
+                    // Update recent users table
+                    updateRecentUsersTable(stats.recentUsers || []);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+
+                // Show error message
+                document.getElementById('totalStudents').textContent = '?';
+                document.getElementById('totalTeachers').textContent = '?';
+                document.getElementById('totalParents').textContent = '?';
+                document.getElementById('totalClasses').textContent = '?';
+                document.getElementById('totalHomework').textContent = '?';
+                document.getElementById('totalUsers').textContent = '?';
+
+                const tableBody = document.getElementById('recentUsersTable');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-8 text-center text-red-500">
+                            <i class="fas fa-exclamation-triangle text-2xl"></i>
+                            <p class="mt-2">Error loading dashboard data</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateRecentUsersTable(users) {
+            const tableBody = document.getElementById('recentUsersTable');
+
+            if (!users || users.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-inbox text-2xl"></i>
+                            <p class="mt-2">No recent users found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = users.map(user => {
+                const roleColors = {
+                    admin: 'bg-red-100 text-red-800',
+                    teacher: 'bg-green-100 text-green-800',
+                    parent: 'bg-blue-100 text-blue-800',
+                    student: 'bg-purple-100 text-purple-800'
+                };
+
+                const createdDate = new Date(user.createdAt);
+                const formattedDate = createdDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">${user.firstName} ${user.lastName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-600">${user.email}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${roleColors[user.role] || 'bg-gray-100 text-gray-800'}">
+                                ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            ${formattedDate}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Navigation handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mainContent = document.getElementById('mainContent');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const section = link.getAttribute('data-section');
+
+                    // Update active state
+                    navLinks.forEach(l => {
+                        l.classList.remove('bg-purple-100', 'text-purple-700', 'font-bold');
+                        l.classList.add('text-gray-600');
+                    });
+                    link.classList.add('bg-purple-100', 'text-purple-700', 'font-bold');
+                    link.classList.remove('text-gray-600');
+
+                    // Load section content
+                    await loadSection(section);
+                });
+            });
+
+            async function loadSection(section) {
+                const token = localStorage.getItem('token');
+
+                switch(section) {
+                    case 'dashboard':
+                        loadDashboardView();
+                        break;
+                    case 'users':
+                        await loadUsersView(token);
+                        break;
+                    case 'students':
+                        await loadStudentsView(token);
+                        break;
+                    case 'teachers':
+                        await loadTeachersView(token);
+                        break;
+                    case 'classes':
+                        await loadClassesView(token);
+                        break;
+                    case 'parents':
+                        await loadParentsView(token);
+                        break;
+                    case 'announcements':
+                        await loadAnnouncementsView(token);
+                        break;
+                    default:
+                        loadDashboardView();
+                }
+            }
+
+            function loadDashboardView() {
+                window.location.reload();
+            }
+
+            async function loadUsersView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">All Users</h2>
+                            <button onclick="showCreateUserForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>Add User
+                            </button>
+                        </div>
+                        <div id="usersContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading users...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/users', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        displayUsersTable(data.data.users);
+                    }
+                } catch (error) {
+                    document.getElementById('usersContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading users</p>
+                    `;
+                }
+            }
+
+            function displayUsersTable(users) {
+                const usersContent = document.getElementById('usersContent');
+                usersContent.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                ${users.map(user => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4">${user.firstName} ${user.lastName}</td>
+                                        <td class="px-6 py-4">${user.email}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-3 py-1 text-xs rounded-full bg-purple-100 text-purple-800">
+                                                ${user.role}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button onclick="showEditUserForm('${user._id}')" class="text-blue-600 hover:text-blue-800 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deleteUser('${user._id}', '${user.firstName} ${user.lastName}')" class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            async function loadStudentsView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">All Students</h2>
+                            <button onclick="showCreateStudentForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>Add Student
+                            </button>
+                        </div>
+                        <div id="studentsContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading students...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/students', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        document.getElementById('studentsContent').innerHTML = `
+                            <p class="text-gray-600 mb-6">Total Students: ${data.results}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                ${data.data.students.map(student => `
+                                    <div class="border-2 border-purple-200 rounded-xl p-4 hover:shadow-lg transition">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 class="font-bold text-lg">${student.firstName} ${student.lastName}</h3>
+                                                <p class="text-xs text-gray-500">ID: ${student.studentId}</p>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="showEditStudentForm('${student._id}')" class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteStudent('${student._id}', '${student.firstName} ${student.lastName}')" class="text-red-600 hover:text-red-800">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-school mr-1"></i>Class: ${student.classId?.className || student.classId?.grade || 'Not assigned'}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('studentsContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading students</p>
+                    `;
+                }
+            }
+
+            async function loadTeachersView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">All Teachers</h2>
+                            <button onclick="showCreateTeacherForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>Add Teacher
+                            </button>
+                        </div>
+                        <div id="teachersContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading teachers...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/teachers', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        document.getElementById('teachersContent').innerHTML = `
+                            <p class="text-gray-600 mb-6">Total Teachers: ${data.results}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${data.data.teachers.map(teacher => `
+                                    <div class="border-2 border-green-200 rounded-xl p-6 hover:shadow-lg transition">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 class="font-bold text-xl">${teacher.firstName || 'N/A'} ${teacher.lastName || ''}</h3>
+                                                <p class="text-xs text-gray-500">Employee ID: ${teacher.employeeId}</p>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="showEditTeacherForm('${teacher._id}')" class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteTeacher('${teacher._id}', '${teacher.firstName} ${teacher.lastName}')" class="text-red-600 hover:text-red-800">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-envelope mr-1"></i>${teacher.email}</p>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-chalkboard mr-1"></i>Assigned Classes: ${teacher.assignedClasses?.length || 0}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('teachersContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading teachers</p>
+                    `;
+                }
+            }
+
+            async function loadClassesView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">All Classes</h2>
+                            <button onclick="showCreateClassForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>Add Class
+                            </button>
+                        </div>
+                        <div id="classesContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading classes...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/classes', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        document.getElementById('classesContent').innerHTML = `
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${data.data.classes.map(classItem => `
+                                    <div class="border-2 border-purple-200 rounded-xl p-6 hover:shadow-xl transition">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h3 class="font-bold text-xl text-purple-700">${classItem.className || classItem.grade}</h3>
+                                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-bold">
+                                                ${classItem.grade || 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div class="space-y-2 text-sm">
+                                            <p class="text-gray-600"><i class="fas fa-chalkboard-teacher mr-2 text-purple-500"></i>Teacher: ${classItem.teacherId?.firstName || 'Not assigned'}</p>
+                                            <p class="text-gray-600"><i class="fas fa-users mr-2 text-purple-500"></i>Students: ${classItem.students?.length || 0}</p>
+                                            <p class="text-gray-600"><i class="fas fa-door-open mr-2 text-purple-500"></i>Room: ${classItem.classroom || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('classesContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading classes</p>
+                    `;
+                }
+            }
+
+            async function loadParentsView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">All Parents</h2>
+                            <button onclick="showCreateParentForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>Add Parent
+                            </button>
+                        </div>
+                        <div id="parentsContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading parents...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/parents', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        document.getElementById('parentsContent').innerHTML = `
+                            <p class="text-gray-600 mb-6">Total Parents: ${data.results}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${data.data.parents.map(parent => `
+                                    <div class="border-2 border-blue-200 rounded-xl p-6 hover:shadow-lg transition">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 class="font-bold text-xl">${parent.firstName || 'N/A'} ${parent.lastName || ''}</h3>
+                                                <p class="text-xs text-gray-500">${parent.relationship || 'Guardian'}</p>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="showEditParentForm('${parent._id}')" class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteParent('${parent._id}', '${parent.firstName} ${parent.lastName}')" class="text-red-600 hover:text-red-800">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-envelope mr-1"></i>${parent.email}</p>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-phone mr-1"></i>${parent.phone || 'N/A'}</p>
+                                        <p class="text-sm text-gray-600"><i class="fas fa-child mr-1"></i>Children: ${parent.children?.length || 0}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('parentsContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading parents</p>
+                    `;
+                }
+            }
+
+            async function loadAnnouncementsView(token) {
+                mainContent.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-fredoka text-2xl text-gray-800">Announcements</h2>
+                            <button onclick="showCreateAnnouncementForm()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold transition">
+                                <i class="fas fa-plus mr-2"></i>New Announcement
+                            </button>
+                        </div>
+                        <div id="announcementsContent" class="text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>
+                            <p class="mt-2 text-gray-600">Loading announcements...</p>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/admin/announcements', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        document.getElementById('announcementsContent').innerHTML = `
+                            <div class="space-y-4">
+                                ${data.data.announcements.map(announcement => `
+                                    <div class="border-l-4 ${announcement.isPinned ? 'border-yellow-500 bg-yellow-50' : 'border-purple-500 bg-gray-50'} p-6 rounded-r-xl">
+                                        <div class="flex items-start justify-between">
+                                            <div class="flex-1">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    <h3 class="font-bold text-lg">${announcement.title}</h3>
+                                                    ${announcement.isPinned ? '<i class="fas fa-thumbtack text-yellow-600"></i>' : ''}
+                                                </div>
+                                                <p class="text-gray-700 mb-3">${announcement.content}</p>
+                                                <div class="flex items-center gap-4 text-sm text-gray-500">
+                                                    <span><i class="fas fa-tag mr-1"></i>${announcement.type}</span>
+                                                    <span><i class="fas fa-users mr-1"></i>${announcement.targetAudience.join(', ')}</span>
+                                                    <span><i class="fas fa-calendar mr-1"></i>${new Date(announcement.publishedAt).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                            <button onclick="showEditAnnouncementForm('${announcement._id}')" class="text-blue-600 hover:text-blue-800 ml-4">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('announcementsContent').innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                        <p class="mt-2 text-red-600">Error loading announcements</p>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

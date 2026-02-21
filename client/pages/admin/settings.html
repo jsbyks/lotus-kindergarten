@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Lotus Kindergarten</title>
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-seedling"></i> Lotus Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i> Students</a>
+                <a href="teachers.html" class="nav-item"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                <a href="parents.html" class="nav-item"><i class="fas fa-users"></i> Parents</a>
+                <a href="classes.html" class="nav-item"><i class="fas fa-school"></i> Classes</a>
+                <a href="homework.html" class="nav-item"><i class="fas fa-tasks"></i> Homework</a>
+                <a href="announcements.html" class="nav-item"><i class="fas fa-bullhorn"></i> Announcements</a>
+                <a href="games-manager.html" class="nav-item"><i class="fas fa-gamepad"></i> Games</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-file-alt"></i> Reports</a>
+                <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>System Settings</h1>
+                    <p class="breadcrumb">Home / Settings</p>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-section">
+                    <h2><i class="fas fa-cog"></i> Configuration</h2>
+                    <p style="color: #666; margin-top: 10px;">Manage system preferences and configurations.</p>
+                    
+                    <div style="margin-top: 30px; padding: 40px; background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); border-radius: 12px; text-align: center; color: white;">
+                        <i class="fas fa-cog fa-spin" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px;">Settings Panel Coming Soon</h3>
+                        <p>System configuration, email settings, and preferences will be available here.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin-utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+    </script>
+</body>
+</html>
