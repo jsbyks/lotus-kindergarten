@@ -174,3 +174,35 @@ document.addEventListener('DOMContentLoaded', () => {
     createMemoryGame();
     newCountingRound();
 });
+// ── Global image fallback ──────────────────────────────────────────────────
+// If any <img> fails to load (e.g. external Pexels URL is unreachable),
+// replace it with a colourful gradient placeholder so the layout never breaks.
+document.addEventListener('error', function (e) {
+    if (e.target.tagName !== 'IMG') return;
+    const img = e.target;
+    if (img.dataset.fallbackApplied) return; // prevent infinite loop
+    img.dataset.fallbackApplied = 'true';
+
+    // Replace with an inline SVG gradient that matches the school colours
+    const gradients = [
+        ['#c084fc', '#f472b6'],  // purple → pink
+        ['#60a5fa', '#a78bfa'],  // blue → purple
+        ['#34d399', '#60a5fa'],  // green → blue
+        ['#fbbf24', '#f472b6'],  // yellow → pink
+    ];
+    const [c1, c2] = gradients[Math.floor(Math.random() * gradients.length)];
+    const emoji = ['🎨', '📚', '🌸', '⭐', '🎒'][Math.floor(Math.random() * 5)];
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+            <defs>
+                <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:${c1}"/>
+                    <stop offset="100%" style="stop-color:${c2}"/>
+                </linearGradient>
+            </defs>
+            <rect width="600" height="400" fill="url(#g)" rx="20"/>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                  font-size="80" font-family="serif">${emoji}</text>
+        </svg>`;
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+}, true /* capture phase — error doesn't bubble */);

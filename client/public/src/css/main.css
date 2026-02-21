@@ -70,9 +70,9 @@
     border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
     animation: blob-morph 10s ease-in-out infinite;
     box-shadow:
-        0 0 0 10px rgba(216, 180, 254, 0.35),
-        0 0 0 22px rgba(249, 168, 212, 0.22),
-        0 20px 60px rgba(155, 93, 229, 0.25);
+        0 0 0 10px rgba(216, 180, 254, 0.35),   /* soft purple ring 1 */
+        0 0 0 22px rgba(249, 168, 212, 0.22),   /* soft pink ring 2  */
+        0 20px 60px rgba(155, 93, 229, 0.25);  /* depth shadow      */
     position: relative;
 }
 
@@ -83,11 +83,11 @@
     width: 100%;
 }
 
-/* Inner dashed purple ring */
+/* Inner dashed purple ring — sits 18px outside the blob */
 .blob-wrapper::before {
     content: '';
     position: absolute;
-    inset: 22px;
+    inset: 22px;   /* wrapper-padding(40) - ring-offset(18) */
     border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
     border: 3px dashed rgba(167, 139, 250, 0.55);
     animation: blob-morph 10s ease-in-out infinite, spin-slow 18s linear infinite;
@@ -95,11 +95,11 @@
     z-index: 2;
 }
 
-/* Outer dotted pink ring */
+/* Outer dotted pink ring — sits 34px outside the blob */
 .blob-wrapper::after {
     content: '';
     position: absolute;
-    inset: 6px;
+    inset: 6px;    /* wrapper-padding(40) - ring-offset(34) */
     border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
     border: 2px dotted rgba(249, 168, 212, 0.5);
     animation: blob-morph 10s ease-in-out infinite reverse, spin-slow 25s linear infinite reverse;

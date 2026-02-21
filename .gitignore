@@ -17,3 +17,6 @@ Thumbs.db
 # Build output
 dist/
 build/
+
+# Duplicate source folder — server only serves client/public/src/
+client/src/

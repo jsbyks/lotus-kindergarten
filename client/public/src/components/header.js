@@ -1,5 +1,12 @@
 class Header extends HTMLElement {
     connectedCallback() {
+        const C = window.SCHOOL_CONFIG || {};
+        const name    = C.name        || 'Lotus Kindergarten';
+        const emoji   = C.emoji       || '🪷';
+        const city    = C.city        || 'Doha';
+        const country = C.country     || 'Qatar';
+        const flag    = C.countryFlag || '🇶🇦';
+
         this.innerHTML = `
         <nav class="lotus-header">
             <div class="lotus-container">
@@ -7,12 +14,12 @@ class Header extends HTMLElement {
                     <!-- Logo -->
                     <div class="logo-section">
                         <div class="logo-circle">
-                            <span class="logo-emoji">🪷</span>
+                            <span class="logo-emoji">${emoji}</span>
                         </div>
                         <div class="logo-text">
                             <a href="index.html">
-                                <h1 class="school-name">Lotus Kindergarten</h1>
-                                <p class="school-location">Doha, Qatar 🇶🇦</p>
+                                <h1 class="school-name">${name}</h1>
+                                <p class="school-location">${city}, ${country} ${flag}</p>
                             </a>
                         </div>
                     </div>

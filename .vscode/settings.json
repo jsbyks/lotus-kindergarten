@@ -1,0 +1,25 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "gh": true,
+        "/^git add server/server\\.js server/app\\.js ; git commit -m \"fix: db readiness guard \\+ clear connection error messages\" ; git push$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git add server/app\\.js ; git commit -m \"fix: trust proxy for Render \\(rate-limit X-Forwarded-For\\)\" ; git push$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^\\$diff = @\\(\\); \\$files = @\\(\"css/main\\.css\",\"css/global-styles\\.css\",\"css/kindergarten-ui\\.css\",\"js/main\\.js\",\"components/header\\.js\",\"components/footer\\.js\"\\); foreach \\(\\$f in \\$files\\) \\{ \\$a = \"client/src/\\$f\"; \\$b = \"client/public/src/\\$f\"; if \\(\\(Get-FileHash \\$a\\)\\.Hash -ne \\(Get-FileHash \\$b\\)\\.Hash\\) \\{ \\$diff \\+= \\$f \\} \\}; \\$diff$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^Copy-Item client/src/css/main\\.css client/public/src/css/main\\.css -Force; Copy-Item client/src/js/main\\.js client/public/src/js/main\\.js -Force; Copy-Item client/src/components/header\\.js client/public/src/components/header\\.js -Force; Copy-Item client/src/components/footer\\.js client/public/src/components/footer\\.js -Force; Write-Host \"Copied all 4 files\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git add -A; git commit -m \"fix: sync client/public/src with latest changes, remove duplicate client/src/\"; git push$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
